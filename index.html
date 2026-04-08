@@ -1,0 +1,507 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=IM+Fell+English:ital@0;1&display=swap');
+:root{
+  --green:#5A8A6A;--green-dark:#3D6B50;--green-light:#EEF6F1;--green-mid:#8AB89A;
+  --wb:rgba(90,138,106,0.2);
+  --surface:var(--color-background-primary);--surface2:var(--color-background-secondary);
+  --tm:var(--color-text-primary);--ts:var(--color-text-secondary);
+  --rmd:var(--border-radius-md);--rlg:var(--border-radius-lg);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+.portal{padding:1.5rem 0;max-width:800px;margin:0 auto;font-family:'IM Fell English',serif;}
+.header{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:0.5px solid var(--wb);}
+.brand-icon{width:52px;height:52px;margin:0 auto 12px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.brand-icon svg{width:26px;height:26px;fill:white;}
+.brand-name{font-family:'Cinzel',serif;font-size:26px;font-weight:500;color:var(--green-dark);letter-spacing:0.04em;}
+.brand-sub{font-family:'IM Fell English',serif;font-style:italic;font-size:15px;color:var(--ts);margin-top:4px;}
+
+.tabs{display:flex;gap:4px;margin-bottom:1.5rem;background:#E4F0E8;border-radius:10px;padding:4px;}
+.tab{flex:1;padding:8px 12px;border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.05em;cursor:pointer;transition:all 0.15s;background:transparent;color:var(--ts);}
+.tab.active{background:var(--green);color:white;}
+.tab:hover:not(.active){background:#D0E8D8;color:var(--green-dark);}
+
+.section{display:none;}.section.active{display:block;}
+.card{background:var(--surface);border:0.5px solid var(--wb);border-radius:var(--rlg);padding:1.25rem;margin-bottom:1rem;}
+
+.form-group{margin-bottom:1.1rem;}
+.lbl{display:block;font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.07em;color:var(--ts);margin-bottom:7px;}
+
+.cat-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+.cat-btn{padding:7px 14px;border-radius:20px;border:0.5px solid #C8B4D8;background:#F0EAF8;font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.04em;cursor:pointer;color:#6A4A88;transition:all 0.15s;}
+.cat-btn.sel-conflict{background:#FDE8ED;border-color:#C4829A;color:#8C4060;}
+.cat-btn.sel-management{background:#FEF4E6;border-color:#D4B06A;color:#8C6030;}
+.cat-btn.sel-policy{background:#E6EEF8;border-color:#7AA0D4;color:#344888;}
+.cat-btn.sel-wellbeing{background:#E4F0E8;border-color:#5A8A6A;color:#3D6B50;}
+
+.sev-row{display:flex;gap:8px;flex-wrap:wrap;}
+.sev-btn{padding:7px 18px;border-radius:20px;border:0.5px solid #C8B4D8;background:#F0EAF8;font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.05em;cursor:pointer;color:#6A4A88;transition:all 0.15s;}
+.sev-btn.sel-low{background:#E4F0E8;border-color:#5A8A6A;color:#3D6B50;}
+.sev-btn.sel-med{background:#FEF4E6;border-color:#D4B06A;color:#8C6030;}
+.sev-btn.sel-high{background:#FDE8ED;border-color:#C4829A;color:#8C4060;}
+
+.msg-area{width:100%;font-family:'IM Fell English',serif;font-size:15px;border:0.5px solid var(--wb);border-radius:var(--rmd);padding:9px 12px;background:var(--surface);color:var(--tm);outline:none;resize:vertical;min-height:120px;line-height:1.7;transition:border-color 0.15s;}
+.msg-area:focus{border-color:var(--green);}
+
+.submit-btn{width:100%;padding:11px;background:var(--green);color:white;border:none;border-radius:var(--rmd);font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.08em;cursor:pointer;transition:background 0.15s;margin-top:4px;}
+.submit-btn:hover{background:var(--green-dark);}
+
+.anon-note{display:flex;align-items:flex-start;gap:10px;background:#EEF6F1;border-radius:var(--rmd);padding:11px 14px;margin-bottom:1.25rem;font-family:'IM Fell English',serif;font-style:italic;font-size:14px;color:var(--green-dark);}
+.anon-note svg{flex-shrink:0;margin-top:2px;}
+
+.guidelines-note{background:#F0EAF8;border-radius:var(--rmd);padding:11px 14px;margin-bottom:1.25rem;font-family:'IM Fell English',serif;font-size:13px;color:#5A3A78;border:0.5px solid #C8B4D8;}
+.guidelines-note summary{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.06em;color:#6A4A88;cursor:pointer;margin-bottom:0;}
+.guidelines-note[open] summary{margin-bottom:8px;}
+.guidelines-note p{margin-bottom:6px;line-height:1.6;font-style:italic;}
+.guidelines-note p:last-child{margin-bottom:0;}
+.guidelines-note strong{font-style:normal;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.05em;color:#6A4A88;}
+
+.flag-box{margin-top:10px;padding:10px 14px;background:#FEF4E6;border-radius:var(--rmd);border:0.5px solid #D4B06A;display:none;}
+.flag-box-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.07em;color:#8C6030;margin-bottom:4px;}
+.flag-box-msg{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:#6B4010;line-height:1.6;}
+.edit-btn{margin-top:8px;padding:5px 16px;background:#D4B06A;color:white;border:none;border-radius:var(--rmd);font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.06em;cursor:pointer;}
+
+.board-grid{display:grid;gap:12px;}
+.fb-card{background:var(--surface);border:0.5px solid var(--wb);border-radius:var(--rlg);padding:1.1rem 1.2rem;}
+.fb-card-removed{background:#F8FBF9;border:0.5px dashed var(--green-mid);border-radius:var(--rlg);padding:1.1rem 1.2rem;}
+.fb-card-flagged{background:#FFFBF0;border:0.5px solid #D4B06A;border-radius:var(--rlg);padding:1.1rem 1.2rem;opacity:0.7;}
+.fb-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+
+.cat-badge{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.06em;padding:3px 10px;border-radius:12px;}
+.cc{background:#FDE8ED;color:#8C4060;}.cm{background:#FEF4E6;color:#8C6030;}.cp{background:#E6EEF8;color:#344888;}.cw{background:#E4F0E8;color:#3D6B50;}
+.sev-tag{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.04em;padding:3px 9px;border-radius:12px;margin-left:6px;}
+.sl{background:#E4F0E8;color:#3D6B50;}.sm{background:#FEF4E6;color:#8C6030;}.sh{background:#FDE8ED;color:#8C4060;}
+.flag-chip{font-family:'Cinzel',serif;font-size:10px;background:#FEF4E6;color:#8C6030;border-radius:12px;padding:3px 9px;margin-left:6px;border:0.5px solid #D4B06A;}
+
+.fb-text{font-family:'IM Fell English',serif;font-size:15px;color:var(--tm);line-height:1.75;}
+.fb-date{font-family:'Cinzel',serif;font-size:10px;color:var(--ts);letter-spacing:0.04em;}
+
+.adm-reply-block{margin-top:10px;padding:10px 12px;background:#E4F0E8;border-left:2px solid var(--green);border-radius:0 var(--rmd) var(--rmd) 0;}
+.adm-reply-lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.07em;color:var(--green-dark);margin-bottom:4px;}
+.adm-reply-txt{font-family:'IM Fell English',serif;font-style:italic;font-size:14px;color:var(--tm);line-height:1.65;}
+
+.removal-block{padding:10px 12px;background:#FDE8ED;border-left:2px solid #C4829A;border-radius:0 var(--rmd) var(--rmd) 0;}
+.removal-lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.07em;color:#8C4060;margin-bottom:4px;}
+.removal-txt{font-family:'IM Fell English',serif;font-style:italic;font-size:14px;color:#6B3050;line-height:1.65;}
+.removed-stamp{font-family:'Cinzel',serif;font-size:11px;color:#8C6070;letter-spacing:0.05em;margin-bottom:8px;}
+
+.filter-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+.fchip{padding:5px 13px;border-radius:16px;border:0.5px solid #C8B4D8;background:#F0EAF8;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.05em;cursor:pointer;color:#6A4A88;}
+.fchip.on{background:var(--green);color:white;border-color:var(--green);}
+
+.gate-wrap{display:flex;flex-direction:column;align-items:center;padding:2.5rem 1rem;gap:1rem;}
+.gate-wrap p{font-family:'IM Fell English',serif;font-style:italic;font-size:15px;color:var(--ts);}
+.gate-wrap input{width:240px;font-family:'IM Fell English',serif;font-size:15px;border:0.5px solid var(--wb);border-radius:var(--rmd);padding:9px 12px;outline:none;background:var(--surface);color:var(--tm);}
+.gate-wrap input:focus{border-color:var(--green);}
+.gate-wrap button{padding:9px 28px;background:var(--green);color:white;border:none;border-radius:var(--rmd);font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.07em;cursor:pointer;}
+
+.admin-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.admin-hdr h2{font-family:'Cinzel',serif;font-size:15px;font-weight:400;letter-spacing:0.06em;color:var(--tm);}
+.logout-btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.05em;color:var(--ts);cursor:pointer;background:none;border:0.5px solid var(--wb);padding:5px 11px;border-radius:6px;}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.25rem;}
+.stat-box{background:#E4F0E8;border-radius:var(--rmd);padding:0.85rem 1rem;}
+.stat-box .num{font-family:'Cinzel',serif;font-size:22px;font-weight:500;color:var(--green-dark);}
+.stat-box .lbl2{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.06em;color:var(--ts);margin-top:3px;}
+
+.adm-card{background:var(--surface);border:0.5px solid var(--wb);border-radius:var(--rlg);padding:1rem 1.15rem;margin-bottom:0.85rem;}
+.adm-card.needs-review{border-color:#D4B06A;background:#FFFBF0;}
+.review-banner{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.06em;color:#8C6030;background:#FEF4E6;border-radius:var(--rmd);padding:5px 10px;margin-bottom:10px;border:0.5px solid #D4B06A;}
+
+.adm-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.act{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.05em;padding:6px 14px;border-radius:6px;cursor:pointer;}
+.act-default{border:0.5px solid #C8B4D8;background:#F0EAF8;color:#6A4A88;}
+.act-reply{border:0.5px solid #A8C4D8;background:#E6EEF8;color:#344888;}
+.act-remove{border:0.5px solid #C4829A;background:#FDE8ED;color:#8C4060;}
+.act-resolve{border:0.5px solid #A8C4B8;background:#DCF0E4;color:#2E6845;}
+.act-approve{border:0.5px solid #5A8A6A;background:#D4EAD8;color:#2E6845;}
+.chip-resolved{font-family:'Cinzel',serif;font-size:10px;background:#DCF0E4;color:#2E6845;border-radius:10px;padding:2px 9px;margin-left:6px;}
+.chip-removed{font-family:'Cinzel',serif;font-size:10px;background:#FDE8ED;color:#8C4060;border-radius:10px;padding:2px 9px;margin-left:6px;}
+.chip-flagged{font-family:'Cinzel',serif;font-size:10px;background:#FEF4E6;color:#8C6030;border-radius:10px;padding:2px 9px;margin-left:6px;}
+
+.reply-box{margin-top:10px;display:none;}
+.reply-box textarea{width:100%;font-family:'IM Fell English',serif;font-style:italic;font-size:14px;border:0.5px solid #A8C4D8;border-radius:var(--rmd);padding:9px 12px;resize:vertical;min-height:80px;background:#EEF4FA;color:var(--tm);outline:none;}
+.reply-send{margin-top:6px;padding:6px 18px;background:#7AA0C8;color:white;border:none;border-radius:var(--rmd);font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.06em;cursor:pointer;}
+
+.remove-box{margin-top:10px;display:none;}
+.remove-box textarea{width:100%;font-family:'IM Fell English',serif;font-style:italic;font-size:14px;border:0.5px solid #C4829A;border-radius:var(--rmd);padding:9px 12px;resize:vertical;min-height:70px;background:#FDE8ED;color:#6B3050;outline:none;}
+.remove-send{margin-top:6px;padding:6px 18px;background:#C4829A;color:white;border:none;border-radius:var(--rmd);font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.06em;cursor:pointer;}
+
+.success-msg{text-align:center;padding:2rem;display:none;}
+.success-msg .check{width:50px;height:50px;border-radius:50%;background:var(--green);margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;}
+.success-msg h3{font-family:'Cinzel',serif;font-size:16px;font-weight:400;letter-spacing:0.06em;margin-bottom:8px;color:var(--tm);}
+.success-msg p{font-family:'IM Fell English',serif;font-style:italic;font-size:14px;color:var(--ts);}
+.back-link{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.06em;color:var(--green);cursor:pointer;margin-top:14px;display:inline-block;background:none;border:none;}
+
+.form-err{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:#8C4060;margin-bottom:10px;display:none;}
+.empty-state{text-align:center;padding:2.5rem;font-family:'IM Fell English',serif;font-style:italic;font-size:15px;color:var(--ts);}
+</style>
+
+<div class="portal">
+  <div class="header">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+    </div>
+    <div class="brand-name">Safe Harbour</div>
+    <div class="brand-sub">your voice, heard safely</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-btn-submit">Share your voice</button>
+    <button class="tab" id="tab-btn-board">Community board</button>
+    <button class="tab" id="tab-btn-admin">Admin</button>
+  </div>
+
+  <div id="tab-submit" class="section active">
+    <div class="anon-note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3D6B50" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>This is a safe space. Your submission is completely anonymous — no names, no emails, no trace of who you are.</span>
+    </div>
+
+    <details class="guidelines-note">
+      <summary>Community guidelines — please read before submitting</summary>
+      <p><strong>Discrimination</strong> — Do not include language that demeans anyone based on race, gender, age, disability, sexual orientation, nationality, or any other protected characteristic.</p>
+      <p><strong>Hate speech</strong> — Content that incites hostility, uses slurs, dehumanises individuals or groups, or is designed to intimidate will not be accepted.</p>
+      <p><strong>Religion</strong> — Mocking or attacking any religion or its followers is not permitted. Legitimate concerns about religious accommodation in the workplace are welcome.</p>
+      <p><strong>Politics</strong> — Party political campaigning or attributing workplace problems to someone's political beliefs is not permitted. Policy and process concerns remain welcome.</p>
+      <p><strong>If your post is flagged</strong> — you will be prompted to edit and resubmit. Severe violations will be blocked entirely.</p>
+    </details>
+
+    <div class="card" id="submit-form-area">
+      <div class="form-group">
+        <span class="lbl">What area does this concern?</span>
+        <div class="cat-buttons">
+          <button class="cat-btn" data-cat="conflict">Workplace conflict</button>
+          <button class="cat-btn" data-cat="management">Management concerns</button>
+          <button class="cat-btn" data-cat="policy">Policy / process</button>
+          <button class="cat-btn" data-cat="wellbeing">Wellbeing &amp; mental health</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <span class="lbl">How urgent is this?</span>
+        <div class="sev-row">
+          <button class="sev-btn" data-sev="low">Low</button>
+          <button class="sev-btn" data-sev="medium">Medium</button>
+          <button class="sev-btn" data-sev="high">High</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <span class="lbl">Your message</span>
+        <textarea class="msg-area" id="fb-text" placeholder="Share what's on your mind. Be clear and considerate — describe the situation, not the person. Your words matter here."></textarea>
+      </div>
+      <div class="form-err" id="form-err"></div>
+      <div class="flag-box" id="flag-box">
+        <div class="flag-box-title" id="flag-title"></div>
+        <div class="flag-box-msg" id="flag-msg"></div>
+        <button class="edit-btn" id="edit-btn">Edit my message</button>
+      </div>
+      <button class="submit-btn" id="submit-btn">Submit in confidence</button>
+    </div>
+    <div class="success-msg" id="success-msg">
+      <div class="check">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3>Your voice has been heard</h3>
+      <p>Thank you for trusting Safe Harbour. Your message has been received and will be reviewed with care.</p>
+      <button class="back-link" id="back-link">Submit another</button>
+    </div>
+  </div>
+
+  <div id="tab-board" class="section">
+    <div class="filter-row">
+      <button class="fchip on" data-filter="all">All</button>
+      <button class="fchip" data-filter="conflict">Conflict</button>
+      <button class="fchip" data-filter="management">Management</button>
+      <button class="fchip" data-filter="policy">Policy</button>
+      <button class="fchip" data-filter="wellbeing">Wellbeing</button>
+    </div>
+    <div class="board-grid" id="board-grid"></div>
+    <div class="empty-state" id="board-empty" style="display:none;">No voices shared in this space yet.</div>
+  </div>
+
+  <div id="tab-admin" class="section">
+    <div id="admin-gate">
+      <div class="gate-wrap">
+        <p>This space is for administrators only</p>
+        <input type="password" id="admin-pw" placeholder="Enter password" />
+        <div id="pw-err" style="font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:#8C4060;display:none;">That password is not correct.</div>
+        <button id="login-btn">Enter</button>
+      </div>
+    </div>
+    <div id="admin-panel" style="display:none;">
+      <div class="admin-hdr">
+        <h2>Admin dashboard</h2>
+        <button class="logout-btn" id="logout-btn">Sign out</button>
+      </div>
+      <div class="stats-row" id="stats-row"></div>
+      <div id="admin-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PASS='Chat2026';
+const catLabels={conflict:'Workplace conflict',management:'Management concerns',policy:'Policy / process issues',wellbeing:'Wellbeing & mental health'};
+const catBadge={conflict:'cc',management:'cm',policy:'cp',wellbeing:'cw'};
+const sevBadge={low:'sl',medium:'sm',high:'sh'};
+let selCat='',selSev='',curFilter='all';
+
+const HARD_BLOCK={
+  label:'Content not permitted',
+  message:'Your message contains language that falls outside our community guidelines — it may include slurs, hate speech, or content that dehumanises others. This cannot be submitted. Please remove this content entirely and focus on your workplace concern.',
+  patterns:[
+    /\b(k[i1]ke|n[i1]gg[ae]r|ch[i1]nk|sp[i1]c|w[e3]tb[a4]ck|f[a4]gg[o0]t|tr[a4]nny|c[u]nt|r[a4]ghead|sand\s?n[i1]gg[ae]r|c[o0][o0]n|g[o0][o0]k|p[a4]ki|b[e3][a4]ner|cr[a4]ck[e3]r|h[o0][n]ky|j[i1]g[a4]b[o0][o0]|z[i1]p[p]erh[e3][a4]d|t[o0]wh[e3][a4]d|d[y]ke|l[e3]zz?[o0])\b/i,
+    /\b(kill all|death to|exterminate|gas the|lynch|bomb the mosque|burn the church|nuke)\b/i,
+    /\b(subhuman|vermin|parasite|infestation|cockroach|disease|plague)\s.*(people|them|they|those|immigrants|muslims|jews|christians|blacks|whites|gays)\b/i,
+  ]
+};
+
+const SOFT_FLAGS=[
+  {
+    label:'Possible discriminatory language detected',
+    message:'Your message may contain language that could be perceived as discriminatory based on a protected characteristic such as race, gender, age, disability, or sexual orientation. Please review and rephrase to focus on the workplace situation rather than personal characteristics.',
+    patterns:[/\b(too old|too young|too female|too gay|too foreign|because (he|she|they) is|typical (man|woman|foreigner|immigrant))\b/i]
+  },
+  {
+    label:'Possible hate speech detected',
+    message:'Your message may contain content that could be interpreted as inciting hostility toward a person or group. Please rephrase to focus on the specific workplace concern rather than targeting individuals or groups.',
+    patterns:[/\b(all (muslims|christians|jews|blacks|whites|gays|women|men) are|those people always|they all|you people)\b/i]
+  },
+  {
+    label:'Religious content flagged',
+    message:'Your message contains references to religion that may be outside our guidelines. Genuine concerns about religious accommodation in the workplace are welcome — please rephrase to focus on the practical issue rather than making generalisations about any faith.',
+    patterns:[/\b(islam is|christianity is|judaism is|religion is a|god is fake|god is real|pray to|allah|infidel|heretic|blasphemy)\b/i]
+  },
+  {
+    label:'Political content flagged',
+    message:'Your message appears to contain party political content or attributes a workplace concern to someone\'s political beliefs. Please rephrase to focus on the specific workplace situation. Policy and process concerns remain very welcome.',
+    patterns:[/\b(vote for|vote against|labour|conservative|democrat|republican|anc|da party|eff party|because (he|she|they) votes|political agenda|left wing|right wing|woke agenda|marxist)\b/i]
+  },
+  {
+    label:'Personalised or aggressive language',
+    message:'Your message appears to target a specific person with aggressive or demeaning language. Please describe the situation and its impact on you or your team, rather than attacking an individual.',
+    patterns:[/\b(idiot|moron|stupid|dumb|loser|pathetic|disgusting|worthless|incompetent fool|piece of|shut up)\b/i]
+  },
+];
+
+let data=[
+  {id:1,cat:'policy',sev:'medium',text:'The leave request process is unclear — different managers seem to have different rules. A written, standardised policy would help everyone.',date:'28 Mar 2026',resolved:false,removed:false,flagged:false,flagReason:'',reply:'',removalReason:''},
+  {id:2,cat:'wellbeing',sev:'high',text:'Workload during month-end has become unsustainable. Team members are regularly working past 7pm with no recognition or support. This is affecting morale.',date:'25 Mar 2026',resolved:false,removed:false,flagged:false,flagReason:'',reply:'Thank you for raising this. We are reviewing workload distribution with team leads and will share an update at the next all-hands.',removalReason:''},
+  {id:3,cat:'management',sev:'low',text:'Feedback from performance reviews is not being communicated in a timely manner. Several colleagues waited over 3 months for written feedback.',date:'20 Mar 2026',resolved:true,removed:true,flagged:false,flagReason:'',reply:'',removalReason:'This post contained details that could identify specific individuals. Please resubmit without identifying details and we will gladly publish it.'},
+];
+let nid=4;
+
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function checkContent(text){
+  for(const p of HARD_BLOCK.patterns){
+    if(p.test(text)) return {type:'hard',label:HARD_BLOCK.label,message:HARD_BLOCK.message};
+  }
+  for(const rule of SOFT_FLAGS){
+    for(const p of rule.patterns){
+      if(p.test(text)) return {type:'soft',label:rule.label,message:rule.message};
+    }
+  }
+  return null;
+}
+
+function showTab(t){
+  ['submit','board','admin'].forEach(n=>{
+    document.getElementById('tab-'+n).classList.toggle('active',n===t);
+    document.getElementById('tab-btn-'+n).classList.toggle('active',n===t);
+  });
+  if(t==='board') renderBoard();
+  if(t==='admin'&&document.getElementById('admin-panel').style.display==='block') renderAdmin();
+}
+
+document.getElementById('tab-btn-submit').addEventListener('click',()=>showTab('submit'));
+document.getElementById('tab-btn-board').addEventListener('click',()=>showTab('board'));
+document.getElementById('tab-btn-admin').addEventListener('click',()=>showTab('admin'));
+
+document.querySelectorAll('.cat-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    selCat=btn.dataset.cat;
+    document.querySelectorAll('.cat-btn').forEach(b=>b.className='cat-btn');
+    btn.classList.add('sel-'+selCat);
+  });
+});
+
+document.querySelectorAll('.sev-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    selSev=btn.dataset.sev;
+    document.querySelectorAll('.sev-btn').forEach(b=>b.className='sev-btn');
+    btn.classList.add('sel-'+selSev);
+  });
+});
+
+document.getElementById('edit-btn').addEventListener('click',()=>{
+  document.getElementById('flag-box').style.display='none';
+  document.getElementById('fb-text').focus();
+});
+
+document.getElementById('submit-btn').addEventListener('click',()=>{
+  const text=document.getElementById('fb-text').value.trim();
+  const err=document.getElementById('form-err');
+  const flagBox=document.getElementById('flag-box');
+  flagBox.style.display='none';
+  err.style.display='none';
+
+  if(!selCat){err.textContent='Please choose a category.';err.style.display='block';return;}
+  if(!selSev){err.textContent='Please indicate urgency.';err.style.display='block';return;}
+  if(text.length<20){err.textContent='Please share a little more detail.';err.style.display='block';return;}
+
+  const check=checkContent(text);
+  if(check){
+    document.getElementById('flag-title').textContent=check.label;
+    document.getElementById('flag-msg').textContent=check.message;
+    flagBox.style.display='block';
+    if(check.type==='hard') document.getElementById('edit-btn').textContent='Edit my message — slurs and hate speech cannot be submitted';
+    else document.getElementById('edit-btn').textContent='Edit my message';
+    return;
+  }
+
+  const now=new Date();
+  const d=now.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][now.getMonth()]+' '+now.getFullYear();
+  data.unshift({id:nid++,cat:selCat,sev:selSev,text,date:d,resolved:false,removed:false,flagged:false,flagReason:'',reply:'',removalReason:''});
+  document.getElementById('submit-form-area').style.display='none';
+  document.getElementById('success-msg').style.display='block';
+});
+
+document.getElementById('back-link').addEventListener('click',()=>{
+  document.getElementById('submit-form-area').style.display='block';
+  document.getElementById('success-msg').style.display='none';
+  document.getElementById('fb-text').value='';
+  document.getElementById('form-err').style.display='none';
+  document.getElementById('flag-box').style.display='none';
+  selCat='';selSev='';
+  document.querySelectorAll('.cat-btn').forEach(b=>b.className='cat-btn');
+  document.querySelectorAll('.sev-btn').forEach(b=>b.className='sev-btn');
+});
+
+document.querySelectorAll('.fchip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    curFilter=chip.dataset.filter;
+    document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('on'));
+    chip.classList.add('on');
+    renderBoard();
+  });
+});
+
+document.getElementById('login-btn').addEventListener('click',()=>{
+  if(document.getElementById('admin-pw').value===PASS){
+    document.getElementById('admin-gate').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    renderAdmin();
+  } else {
+    document.getElementById('pw-err').style.display='block';
+  }
+});
+
+document.getElementById('admin-pw').addEventListener('keydown',e=>{
+  if(e.key==='Enter') document.getElementById('login-btn').click();
+});
+
+document.getElementById('logout-btn').addEventListener('click',()=>{
+  document.getElementById('admin-gate').style.display='block';
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('admin-pw').value='';
+});
+
+function renderBoard(){
+  const grid=document.getElementById('board-grid');
+  const empty=document.getElementById('board-empty');
+  const items=data.filter(f=>curFilter==='all'||f.cat===curFilter);
+  if(!items.length){grid.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  grid.innerHTML=items.map(f=>{
+    if(f.removed) return `<div class="fb-card-removed">
+      <p class="removed-stamp">This post has been removed by an administrator</p>
+      <div class="removal-block"><div class="removal-lbl">Reason for removal</div><div class="removal-txt">${esc(f.removalReason)}</div></div>
+    </div>`;
+    return `<div class="fb-card">
+      <div class="fb-top">
+        <div><span class="cat-badge ${catBadge[f.cat]}">${catLabels[f.cat]}</span><span class="sev-tag ${sevBadge[f.sev]}">${cap(f.sev)}</span></div>
+        <span class="fb-date">${f.date}</span>
+      </div>
+      <p class="fb-text">${esc(f.text)}</p>
+      ${f.reply?`<div class="adm-reply-block"><div class="adm-reply-lbl">Response from management</div><div class="adm-reply-txt">${esc(f.reply)}</div></div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderAdmin(){
+  const total=data.length;
+  const open=data.filter(f=>!f.resolved&&!f.removed).length;
+  const high=data.filter(f=>f.sev==='high'&&!f.removed).length;
+  const resolved=data.filter(f=>f.resolved).length;
+  document.getElementById('stats-row').innerHTML=`
+    <div class="stat-box"><div class="num">${total}</div><div class="lbl2">Total</div></div>
+    <div class="stat-box"><div class="num">${open}</div><div class="lbl2">Open</div></div>
+    <div class="stat-box"><div class="num">${high}</div><div class="lbl2">High urgency</div></div>
+    <div class="stat-box"><div class="num">${resolved}</div><div class="lbl2">Resolved</div></div>
+  `;
+  document.getElementById('admin-list').innerHTML=data.map(f=>`
+    <div class="adm-card${f.flagged?' needs-review':''}">
+      ${f.flagged?`<div class="review-banner">Flagged for review — ${esc(f.flagReason)}</div>`:''}
+      <div class="fb-top">
+        <div>
+          <span class="cat-badge ${catBadge[f.cat]}">${catLabels[f.cat]}</span>
+          <span class="sev-tag ${sevBadge[f.sev]}">${cap(f.sev)}</span>
+          ${f.resolved?'<span class="chip-resolved">Resolved</span>':''}
+          ${f.removed?'<span class="chip-removed">Removed</span>':''}
+          ${f.flagged?'<span class="chip-flagged">Needs review</span>':''}
+        </div>
+        <span style="font-family:'Cinzel',serif;font-size:10px;color:var(--ts)">${f.date}</span>
+      </div>
+      <p class="fb-text" style="margin-top:8px">${esc(f.text)}</p>
+      ${f.reply?`<div class="adm-reply-block" style="margin-top:10px"><div class="adm-reply-lbl">Your response (visible on board)</div><div class="adm-reply-txt">${esc(f.reply)}</div></div>`:''}
+      ${f.removed&&f.removalReason?`<div class="removal-block" style="margin-top:10px"><div class="removal-lbl">Removal reason shown on board</div><div class="removal-txt">${esc(f.removalReason)}</div></div>`:''}
+      ${!f.removed?`
+        <div class="adm-actions">
+          ${!f.resolved?`<button class="act act-resolve" data-action="resolve" data-id="${f.id}">Mark resolved</button>`:`<button class="act act-default" data-action="reopen" data-id="${f.id}">Reopen</button>`}
+          <button class="act act-reply" data-action="toggle-reply" data-id="${f.id}">${f.reply?'Edit response':'Reply'}</button>
+          <button class="act act-remove" data-action="toggle-remove" data-id="${f.id}">Remove</button>
+        </div>
+        <div class="reply-box" id="reply-${f.id}">
+          <textarea id="reply-text-${f.id}" placeholder="Write a response — this will appear on the community board...">${f.reply}</textarea>
+          <button class="reply-send act" data-action="send-reply" data-id="${f.id}">Post response</button>
+        </div>
+        <div class="remove-box" id="remove-${f.id}">
+          <textarea id="remove-text-${f.id}" placeholder="Provide a reason — this will be shown on the board so the author can see it..."></textarea>
+          <button class="remove-send act" data-action="send-remove" data-id="${f.id}">Remove &amp; notify author</button>
+        </div>`:''}
+    </div>
+  `).join('');
+
+  document.getElementById('admin-list').addEventListener('click',e=>{
+    const btn=e.target.closest('[data-action]');
+    if(!btn) return;
+    const id=parseInt(btn.dataset.id);
+    const action=btn.dataset.action;
+    const f=data.find(x=>x.id===id);
+    if(action==='resolve'){f.resolved=true;renderAdmin();}
+    else if(action==='reopen'){f.resolved=false;renderAdmin();}
+    else if(action==='toggle-reply'){
+      const rb=document.getElementById('reply-'+id);
+      rb.style.display=rb.style.display==='block'?'none':'block';
+      document.getElementById('remove-'+id).style.display='none';
+    }
+    else if(action==='toggle-remove'){
+      const rb=document.getElementById('remove-'+id);
+      rb.style.display=rb.style.display==='block'?'none':'block';
+      document.getElementById('reply-'+id).style.display='none';
+    }
+    else if(action==='send-reply'){
+      const t=document.getElementById('reply-text-'+id).value.trim();
+      if(!t){alert('Please write a response before posting.');return;}
+      f.reply=t;renderAdmin();renderBoard();
+    }
+    else if(action==='send-remove'){
+      const t=document.getElementById('remove-text-'+id).value.trim();
+      if(!t){alert('A reason is required — the author deserves to know why.');return;}
+      f.removed=true;f.removalReason=t;renderAdmin();renderBoard();
+    }
+  });
+}
+</script>
