@@ -3,106 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Hub</title>
+    <title>Voice Hub | Soft Retro</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap');
 
         :root {
-            --pop-yellow: #FFDE00;
-            --pop-red: #ED1C24;
-            --pop-blue: #0081FF;
-            --pop-cyan: #00DFFF;
-            --ink-black: #000000;
-            --white: #FFFFFF;
-            --halftone-bg: radial-gradient(rgba(0,0,0,0.12) 1.5px, transparent 0);
+            /* Soft Retro Palette - Easy on the eyes */
+            --retro-cream: #FDF5E6;
+            --retro-teal: #92C5C5;
+            --retro-salmon: #F2A6A6;
+            --retro-sand: #E6D5B8;
+            --ink: #333333;
+            --halftone: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 0);
         }
 
         body {
-            background-color: #f7f7f7;
-            background-image: var(--halftone-bg);
-            background-size: 16px 16px;
+            background-color: var(--retro-cream);
+            background-image: var(--halftone);
+            background-size: 15px 15px;
             font-family: 'Comic Neue', cursive;
-            margin: 0; padding: 0; color: var(--ink-black);
+            margin: 0; padding: 0; color: var(--ink);
         }
 
-        .portal { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .portal { max-width: 750px; margin: 0 auto; padding: 2rem 1rem; }
 
+        /* Soft Header */
         .header {
-            text-align: center; background: var(--pop-yellow);
-            border: 4px solid var(--ink-black); padding: 2rem;
-            margin-bottom: 2rem; box-shadow: 12px 12px 0px var(--ink-black);
-            transform: rotate(-1.5deg);
+            text-align: center; background: var(--retro-sand);
+            border: 3px solid var(--ink); padding: 1.5rem;
+            margin-bottom: 2rem; box-shadow: 8px 8px 0px var(--ink);
+            transform: rotate(-0.5deg);
         }
 
-        .brand-icon {
-            width: 70px; height: 70px; background: var(--ink-black);
-            border-radius: 50%; margin: 0 auto 15px;
-            display: flex; align-items: center; justify-content: center;
-            border: 4px solid var(--white); box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
-        }
-        .brand-icon svg { width: 40px; height: 40px; fill: var(--pop-yellow); }
-        .brand-name { font-family: 'Bangers', cursive; font-size: 60px; margin: 0; letter-spacing: 3px; }
+        .brand-name { font-family: 'Bangers', cursive; font-size: 55px; margin: 0; letter-spacing: 2px; }
 
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        /* Tabs */
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
         .tab {
-            flex: 1; padding: 15px; font-family: 'Bangers', cursive; font-size: 24px;
-            border: 4px solid var(--ink-black); background: var(--white);
-            cursor: pointer; box-shadow: 6px 6px 0px var(--ink-black);
+            flex: 1; padding: 12px; font-family: 'Bangers', cursive; font-size: 20px;
+            border: 3px solid var(--ink); background: white; cursor: pointer;
+            box-shadow: 4px 4px 0px var(--ink); transition: 0.2s;
         }
-        .tab.active { background: var(--pop-cyan); transform: translate(3px, 3px); box-shadow: 3px 3px 0px var(--ink-black); }
+        .tab.active { background: var(--retro-teal); transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--ink); }
 
         .section { display: none; }
         .section.active { display: block; }
 
+        /* Soft Cards */
         .card {
-            background: var(--white); border: 4px solid var(--ink-black);
-            padding: 25px; margin-bottom: 25px; box-shadow: 10px 10px 0px var(--ink-black);
+            background: white; border: 3px solid var(--ink);
+            padding: 20px; margin-bottom: 20px; box-shadow: 6px 6px 0px var(--ink);
         }
 
-        .lbl { font-family: 'Bangers', cursive; font-size: 26px; display: block; margin-bottom: 15px; color: var(--pop-red); }
+        .lbl { font-family: 'Bangers', cursive; font-size: 22px; display: block; margin-bottom: 10px; color: var(--ink); }
         
         .choice-btn {
-            padding: 10px 20px; border: 3px solid var(--ink-black);
-            font-family: 'Bangers', cursive; font-size: 18px; cursor: pointer; background: var(--white);
-            box-shadow: 4px 4px 0px var(--ink-black); margin-right: 12px; margin-bottom: 12px;
+            padding: 8px 16px; border: 2px solid var(--ink);
+            font-family: 'Bangers', cursive; font-size: 16px; cursor: pointer; background: white;
+            box-shadow: 3px 3px 0px var(--ink); margin-right: 8px; margin-bottom: 8px;
         }
 
-        /* Logic Colors */
-        .sel-med { background: var(--pop-yellow) !important; }
-        .sel-high { background: var(--pop-blue) !important; color: white !important; }
-        .sel-low { background: var(--pop-cyan) !important; }
-        .sel-removed { background: var(--pop-red) !important; color: white !important; }
+        /* Status Colors */
+        .sel-med, .sel-management { background: var(--retro-sand) !important; }
+        .sel-high, .sel-conflict { background: var(--retro-salmon) !important; }
+        .sel-low, .sel-wellbeing { background: var(--retro-teal) !important; }
 
         .msg-area { 
-            width: 100%; height: 120px; border: 4px solid var(--ink-black); 
-            padding: 15px; font-family: inherit; font-size: 18px; font-weight: bold; 
+            width: 100%; height: 100px; border: 3px solid var(--ink); 
+            padding: 12px; font-family: inherit; font-size: 16px; margin-bottom: 10px;
         }
 
         .submit-btn {
-            width: 100%; padding: 20px; background: var(--pop-red); color: var(--white);
-            font-family: 'Bangers', cursive; font-size: 32px; border: 4px solid var(--ink-black);
-            cursor: pointer; box-shadow: 6px 6px 0px var(--ink-black);
+            width: 100%; padding: 15px; background: var(--retro-salmon);
+            font-family: 'Bangers', cursive; font-size: 26px; border: 3px solid var(--ink);
+            cursor: pointer; box-shadow: 4px 4px 0px var(--ink);
         }
 
-        .status-tag { font-family: 'Bangers'; padding: 2px 8px; border: 2px solid var(--ink-black); float: right; }
-        .fb-text { font-size: 22px; font-weight: bold; margin: 15px 0; }
-        .admin-comment { color: var(--pop-red); font-family: 'Permanent Marker'; font-size: 18px; }
+        .status-tag { font-family: 'Bangers'; padding: 2px 8px; border: 2px solid var(--ink); float: right; font-size: 14px; }
+        .admin-controls { display: flex; gap: 5px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="portal">
     <div class="header">
-        <div class="brand-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-        </div>
-        <h1 class="brand-name">Voice Hub</h1>
+        <h1 class="brand-name">VOICE HUB</h1>
     </div>
 
     <div class="tabs">
-        <button class="tab active" onclick="showTab('submit', this)">SEND DISPATCH</button>
+        <button class="tab active" onclick="showTab('submit', this)">DISPATCH</button>
         <button class="tab" onclick="showTab('board', this)">THE HUB</button>
         <button class="tab" onclick="showTab('admin', this)">ADMIN HQ</button>
     </div>
@@ -113,7 +104,6 @@
             <div id="cat-group">
                 <button class="choice-btn" onclick="setCat('conflict', this)">Conflict</button>
                 <button class="choice-btn" onclick="setCat('management', this)">Management</button>
-                <button class="choice-btn" onclick="setCat('policy', this)">Policy</button>
                 <button class="choice-btn" onclick="setCat('wellbeing', this)">Wellbeing</button>
             </div>
             <label class="lbl">URGENCY</label>
@@ -122,9 +112,8 @@
                 <button class="choice-btn" onclick="setSev('medium', this)">Medium</button>
                 <button class="choice-btn" onclick="setSev('high', this)">High</button>
             </div>
-            <label class="lbl">MESSAGE</label>
-            <textarea id="fb-text" class="msg-area" placeholder="Broadcast your message..."></textarea>
-            <button class="submit-btn" onclick="submitReport()">BROADCAST NOW!</button>
+            <textarea id="fb-text" class="msg-area" placeholder="Enter dispatch details..."></textarea>
+            <button class="submit-btn" onclick="submitReport()">SEND TO HUB</button>
         </div>
     </div>
 
@@ -134,23 +123,19 @@
 
     <div id="admin" class="section">
         <div id="admin-gate" class="card" style="text-align:center;">
-            <label class="lbl">ADMIN KEY REQUIRED</label>
-            <input type="password" id="admin-pw">
-            <br><br>
-            <button class="choice-btn" onclick="login()">ENTER HQ</button>
+            <label class="lbl">KEY REQUIRED</label>
+            <input type="password" id="admin-pw" style="padding:8px; border:2px solid black;">
+            <button class="choice-btn" onclick="login()">ENTER</button>
         </div>
         <div id="admin-panel" style="display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <label class="lbl">HQ DASHBOARD</label>
-                <button class="choice-btn sel-removed" onclick="logout()">LOGOUT</button>
-            </div>
+            <button class="choice-btn" style="float:right;" onclick="logout()">LOGOUT</button>
+            <label class="lbl">HQ DASHBOARD</label>
             <div id="admin-list"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyCg5LSNh0EIKjv5eQKPpWT8ZMF49zQX9Dc",
         authDomain: "voice-hub-portal.firebaseapp.com",
@@ -176,52 +161,50 @@
 
     function setCat(val, btn) {
         selCat = val;
-        document.querySelectorAll('#cat-group .choice-btn').forEach(b => b.classList.remove('sel-med','sel-high','sel-low','sel-removed'));
-        btn.classList.add('sel-low'); // Visual feedback
+        document.querySelectorAll('#cat-group .choice-btn').forEach(b => b.classList.remove('sel-low','sel-wellbeing','sel-conflict'));
+        btn.classList.add('sel-low'); 
     }
 
     function setSev(val, btn) {
         selSev = val;
-        document.querySelectorAll('#sev-group .choice-btn').forEach(b => b.classList.remove('sel-med','sel-high','sel-low'));
+        document.querySelectorAll('#sev-group .choice-btn').forEach(b => b.classList.remove('sel-low','sel-med','sel-high'));
         btn.classList.add(val === 'medium' ? 'sel-med' : (val === 'high' ? 'sel-high' : 'sel-low'));
     }
 
     function submitReport() {
         const text = document.getElementById('fb-text').value;
-        if(!selCat || !selSev || !text) return alert("Fill everything!");
+        if(!selCat || !selSev || !text) return alert("Fields missing!");
         reportsRef.push({ 
             cat: selCat, sev: selSev, text: text, 
             date: new Date().toLocaleDateString(), 
             status: 'active', comment: '' 
         });
-        alert("KAPOW! Sent.");
         document.getElementById('fb-text').value = '';
+        alert("Dispatched!");
     }
 
     function login() {
         if(document.getElementById('admin-pw').value === 'Chat2026') {
             document.getElementById('admin-gate').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'block';
-        } else { alert("WRONG KEY!"); }
+        }
     }
 
     function logout() {
-        document.getElementById('admin-pw').value = '';
-        document.getElementById('admin-gate').style.display = 'block';
         document.getElementById('admin-panel').style.display = 'none';
+        document.getElementById('admin-gate').style.display = 'block';
     }
 
-    function updateReport(id, status) {
-        let comment = prompt("Enter Admin Comment:");
-        if(comment === null) return;
-        db.ref('reports/' + id).update({ status: status, comment: comment });
+    function updateItem(id, status) {
+        let com = prompt("Admin Comment:");
+        if(com !== null) db.ref('reports/'+id).update({status: status, comment: com});
     }
 
-    function hardDelete(id) {
-        if(confirm("DELETE FOREVER?")) db.ref('reports/' + id).remove();
+    function killItem(id) {
+        if(confirm("Delete forever?")) db.ref('reports/'+id).remove();
     }
 
-    // Load Data
+    // This is the listener that makes data "show up"
     reportsRef.on('value', (snap) => {
         const data = snap.val();
         const grid = document.getElementById('board-grid');
@@ -230,23 +213,25 @@
 
         for(let id in data) {
             const r = data[id];
-            const isRemoved = r.status === 'removed';
+            const removed = r.status === 'removed';
             
-            // Public Card
-            grid.innerHTML = `<div class="card" style="${isRemoved ? 'opacity:0.5' : ''}">
-                <span class="status-tag ${r.status === 'active' ? 'sel-low' : 'sel-med'}">${r.status.toUpperCase()}</span>
-                <label class="lbl">${r.cat}</label>
-                <p class="fb-text">${isRemoved ? '[ REDACTED ]' : r.text}</p>
-                ${r.comment ? `<p class="admin-comment">HQ: ${r.comment}</p>` : ''}
+            // Public View
+            grid.innerHTML = `<div class="card" style="${removed ? 'opacity:0.5' : ''}">
+                <span class="status-tag">${r.status.toUpperCase()}</span>
+                <p><b>[${r.cat.toUpperCase()}]</b></p>
+                <p>${removed ? '--- Content Removed ---' : r.text}</p>
+                ${r.comment ? `<p style="color:red"><i>Note: ${r.comment}</i></p>` : ''}
                 <small>${r.date}</small>
             </div>` + grid.innerHTML;
 
-            // Admin Card
+            // Admin View
             adminGrid.innerHTML = `<div class="card">
-                <p><b>${r.text}</b></p>
-                <button class="choice-btn sel-low" onclick="updateReport('${id}', 'resolved')">Resolve</button>
-                <button class="choice-btn sel-med" onclick="updateReport('${id}', 'removed')">Soft Remove</button>
-                <button class="choice-btn sel-removed" onclick="hardDelete('${id}')">Hard Delete</button>
+                <p>${r.text}</p>
+                <div class="admin-controls">
+                    <button class="choice-btn" onclick="updateItem('${id}', 'resolved')">Resolve</button>
+                    <button class="choice-btn" onclick="updateItem('${id}', 'removed')">Soft Remove</button>
+                    <button class="choice-btn" onclick="killItem('${id}')">Delete</button>
+                </div>
             </div>` + adminGrid.innerHTML;
         }
     });
