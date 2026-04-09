@@ -1,593 +1,278 @@
-<style>
-/* Loading Comic Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Harbour Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap');
 
-:root {
-  --yellow: #FFDE00;
-  --red: #FF0000;
-  --blue: #0081FF;
-  --green: #00FF00;
-  --black: #000000;
-  --white: #FFFFFF;
-  --surface: var(--white);
-  --tm: var(--black);
-  --ts: #333;
-  --border-width: 3px;
-  /* Ben-Day Dots Background */
-  --dot-bg: radial-gradient(rgba(0,0,0,0.1) 1px, transparent 0);
-}
+        :root {
+            --comic-yellow: #FFF8B0;
+            --comic-pink: #FFD1DC;
+            --comic-blue: #B0E0E6;
+            --comic-green: #C1F0C1;
+            --comic-red: #FF6B6B;
+            --ink-black: #222222;
+            --paper-white: #FFFFFF;
+            --border-thick: 3px;
+            --dot-bg: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 0);
+        }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+        body {
+            background-color: #fafafa;
+            background-image: var(--dot-bg);
+            background-size: 24px 24px;
+            font-family: 'Comic Neue', cursive;
+            color: var(--ink-black);
+            margin: 0;
+            padding: 0;
+        }
 
-body {
-  background-color: #f0f0f0;
-  background-image: var(--dot-bg);
-  background-size: 20px 20px;
-  font-family: 'Comic Neue', cursive;
-  color: var(--black);
-}
+        .portal { max-width: 850px; margin: 0 auto; padding: 2rem 1rem; }
 
-.portal {
-  padding: 2rem 1rem;
-  max-width: 850px;
-  margin: 0 auto;
-}
+        /* HEADER */
+        .header {
+            text-align: center;
+            background: var(--comic-yellow);
+            border: var(--border-thick) solid var(--ink-black);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 10px 10px 0px var(--ink-black);
+            transform: rotate(-0.5deg);
+        }
 
-/* Header / Title */
-.header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-  padding: 1.5rem;
-  background: var(--yellow);
-  border: var(--border-width) solid var(--black);
-  box-shadow: 8px 8px 0px var(--black);
-  transform: rotate(-1deg);
-}
+        .brand-name {
+            font-family: 'Bangers', cursive;
+            font-size: 52px;
+            letter-spacing: 3px;
+            text-shadow: 3px 3px 0px white;
+            margin: 0;
+        }
 
-.brand-icon {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 10px;
-  background: var(--red);
-  border: var(--border-width) solid var(--black);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 4px 4px 0px var(--black);
-}
+        /* TABS */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab {
+            flex: 1; padding: 12px;
+            font-family: 'Bangers', cursive;
+            font-size: 18px;
+            border: var(--border-thick) solid var(--ink-black);
+            background: white;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--ink-black);
+        }
+        .tab.active { background: var(--comic-blue); transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--ink-black); }
 
-.brand-icon svg {
-  width: 30px;
-  height: 30px;
-  fill: white;
-}
+        /* CARDS */
+        .card {
+            background: white;
+            border: var(--border-thick) solid var(--ink-black);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 6px 6px 0px var(--ink-black);
+        }
 
-.brand-name {
-  font-family: 'Bangers', cursive;
-  font-size: 48px;
-  color: var(--black);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  -webkit-text-stroke: 1px var(--black);
-  text-shadow: 3px 3px 0px var(--white);
-}
+        .section { display: none; }
+        .section.active { display: block; }
 
-.brand-sub {
-  font-family: 'Permanent Marker', cursive;
-  font-size: 18px;
-  color: var(--red);
-  margin-top: 5px;
-}
+        /* INPUTS */
+        .lbl { font-family: 'Bangers', cursive; font-size: 20px; display: block; margin-bottom: 10px; }
+        .msg-area { width: 100%; height: 120px; border: var(--border-thick) solid var(--ink-black); padding: 10px; font-family: inherit; font-weight: bold; }
+        
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .choice-btn {
+            padding: 8px 15px; border: 2px solid var(--ink-black);
+            font-family: 'Bangers', cursive; cursor: pointer; background: white;
+            box-shadow: 3px 3px 0px var(--ink-black);
+        }
 
-/* Tabs */
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 2rem;
-}
+        /* ACTION COLORS */
+        .sel-conflict, .sel-high { background: var(--comic-red) !important; color: white; }
+        .sel-management, .sel-med { background: var(--comic-yellow) !important; }
+        .sel-policy { background: var(--comic-blue) !important; }
+        .sel-wellbeing, .sel-low { background: var(--comic-green) !important; }
 
-.tab {
-  flex: 1;
-  padding: 12px;
-  border: var(--border-width) solid var(--black);
-  background: var(--white);
-  font-family: 'Bangers', cursive;
-  font-size: 18px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: 0.1s;
-  box-shadow: 4px 4px 0px var(--black);
-}
+        .submit-btn {
+            width: 100%; padding: 15px; background: var(--comic-red); color: white;
+            font-family: 'Bangers', cursive; font-size: 24px; border: var(--border-thick) solid var(--ink-black);
+            cursor: pointer; box-shadow: 5px 5px 0px var(--ink-black);
+        }
 
-.tab.active {
-  background: var(--blue);
-  color: white;
-  transform: translateY(2px);
-  box-shadow: 2px 2px 0px var(--black);
-}
+        /* ADMIN BUTTONS */
+        .act-btn {
+            font-family: 'Bangers', cursive; padding: 5px 12px; border: 2px solid black;
+            cursor: pointer; box-shadow: 2px 2px 0px black; margin-right: 5px;
+        }
+        .btn-soft { background: var(--comic-yellow); }
+        .btn-delete { background: var(--ink-black); color: white; }
 
-.tab:hover:not(.active) {
-  background: var(--yellow);
-}
-
-/* Sections & Cards */
-.section { display: none; }
-.section.active { display: block; }
-
-.card {
-  background: var(--surface);
-  border: var(--border-width) solid var(--black);
-  padding: 2rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 10px 10px 0px var(--black);
-  position: relative;
-}
-
-/* Form Styling */
-.form-group { margin-bottom: 1.5rem; }
-.lbl {
-  display: block;
-  font-family: 'Bangers', cursive;
-  font-size: 20px;
-  color: var(--black);
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-
-.cat-buttons, .sev-row { display: flex; gap: 10px; flex-wrap: wrap; }
-
-.cat-btn, .sev-btn, .fchip {
-  padding: 10px 15px;
-  border: 2px solid var(--black);
-  background: var(--white);
-  font-family: 'Bangers', cursive;
-  font-size: 14px;
-  cursor: pointer;
-  box-shadow: 3px 3px 0px var(--black);
-  transition: 0.1s;
-}
-
-.cat-btn:active, .sev-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px var(--black);
-}
-
-/* Dynamic Colors for Buttons */
-.sel-conflict, .sel-high, .sh { background: var(--red) !important; color: white !important; }
-.sel-management, .sel-med, .sm { background: var(--yellow) !important; color: black !important; }
-.sel-policy, .fchip.on { background: var(--blue) !important; color: white !important; }
-.sel-wellbeing, .sel-low, .sl { background: var(--green) !important; color: black !important; }
-
-.msg-area {
-  width: 100%;
-  font-family: 'Comic Neue', cursive;
-  font-weight: bold;
-  font-size: 16px;
-  border: var(--border-width) solid var(--black);
-  padding: 15px;
-  background: #fff;
-  outline: none;
-  min-height: 120px;
-  box-shadow: inset 4px 4px 0px rgba(0,0,0,0.05);
-}
-
-.submit-btn {
-  width: 100%;
-  padding: 15px;
-  background: var(--red);
-  color: white;
-  border: var(--border-width) solid var(--black);
-  font-family: 'Bangers', cursive;
-  font-size: 24px;
-  letter-spacing: 2px;
-  cursor: pointer;
-  box-shadow: 6px 6px 0px var(--black);
-  text-transform: uppercase;
-}
-
-.submit-btn:hover { background: var(--black); color: var(--yellow); }
-
-/* Alerts & Notes */
-.anon-note {
-  background: var(--green);
-  border: var(--border-width) solid var(--black);
-  padding: 15px;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
-  box-shadow: 6px 6px 0px var(--black);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.guidelines-note {
-  background: var(--white);
-  border: var(--border-width) solid var(--black);
-  padding: 10px;
-  margin-bottom: 1.5rem;
-  box-shadow: 6px 6px 0px var(--black);
-}
-
-.flag-box {
-  margin-top: 15px;
-  padding: 15px;
-  background: var(--yellow);
-  border: var(--border-width) dashed var(--black);
-}
-
-.flag-box-title { font-family: 'Bangers', cursive; font-size: 18px; color: var(--red); }
-
-/* Board */
-.fb-card {
-  background: white;
-  border: var(--border-width) solid var(--black);
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  box-shadow: 8px 8px 0px var(--black);
-}
-
-.fb-text { font-size: 18px; line-height: 1.4; font-weight: 700; margin: 10px 0; }
-
-.cat-badge {
-  font-family: 'Bangers', cursive;
-  padding: 4px 10px;
-  border: 1px solid black;
-  margin-right: 5px;
-}
-
-/* Admin Dashboard */
-.stat-box {
-  background: var(--white);
-  border: var(--border-width) solid var(--black);
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 4px 4px 0px var(--black);
-}
-.stat-box .num { font-family: 'Bangers', cursive; font-size: 32px; color: var(--red); }
-
-.gate-wrap {
-  background: var(--yellow);
-  border: var(--border-width) solid var(--black);
-  padding: 3rem;
-  box-shadow: 12px 12px 0px var(--black);
-}
-
-.gate-wrap input {
-  border: var(--border-width) solid var(--black);
-  padding: 10px;
-  font-size: 18px;
-  text-align: center;
-}
-
-.gate-wrap button {
-    font-family: 'Bangers', cursive;
-    padding: 10px 30px;
-    background: var(--black);
-    color: white;
-    font-size: 20px;
-    border: none;
-    cursor: pointer;
-}
-
-.act {
-    font-family: 'Bangers', cursive;
-    text-transform: uppercase;
-    border: 2px solid black;
-    box-shadow: 2px 2px 0px black;
-}
-</style>
+        .badge { font-family: 'Bangers', cursive; padding: 2px 8px; border: 1px solid black; margin-right: 5px; font-size: 12px; }
+    </style>
+</head>
+<body>
 
 <div class="portal">
-  <div class="header">
-    <div class="brand-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-    </div>
-    <div class="brand-name">Voice Hub</div>
-    <div class="brand-sub">BOOM! YOUR VOICE, HEARD SAFELY!</div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" id="tab-btn-submit">SAY SOMETHING!</button>
-    <button class="tab" id="tab-btn-board">THE BOARD</button>
-    <button class="tab" id="tab-btn-admin">TOP SECRET</button>
-  </div>
-
-  <div id="tab-submit" class="section active">
-    <div class="anon-note">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span>RELAX! YOU'RE TOTALLY ANONYMOUS HERE! NO NAMES, NO TRACE!</span>
+    <div class="header">
+        <h1 class="brand-name">Safe Harbour</h1>
+        <p style="font-family:'Permanent Marker'">GLOBAL FEEDBACK PORTAL</p>
     </div>
 
-    <details class="guidelines-note">
-      <summary style="font-family:'Bangers'; cursor:pointer;">THE CODE OF CONDUCT (READ THIS!)</summary>
-      <div style="margin-top:10px;">
-        <p><strong>NO HATE</strong> — Keep it professional, heroes.</p>
-        <p><strong>NO POLITICS</strong> — Save the debates for the city hall.</p>
-        <p><strong>STAY CIVIL</strong> — Attacks on individuals will be ZAPPED by admins.</p>
-      </div>
-    </details>
+    <div class="tabs">
+        <button class="tab active" onclick="openTab('submit')">FILE REPORT</button>
+        <button class="tab" onclick="openTab('board')">PUBLIC BOARD</button>
+        <button class="tab" onclick="openTab('admin')">ADMIN HQ</button>
+    </div>
 
-    <div class="card" id="submit-form-area">
-      <div class="form-group">
-        <span class="lbl">Choose your mission:</span>
-        <div class="cat-buttons">
-          <button class="cat-btn" data-cat="conflict">Conflict</button>
-          <button class="cat-btn" data-cat="management">Management</button>
-          <button class="cat-btn" data-cat="policy">Policy</button>
-          <button class="cat-btn" data-cat="wellbeing">Wellbeing</button>
+    <div id="submit" class="section active">
+        <div class="card">
+            <label class="lbl">CATEGORY</label>
+            <div class="btn-group" id="cat-group">
+                <button class="choice-btn" onclick="setCat('conflict', this)">Conflict</button>
+                <button class="choice-btn" onclick="setCat('management', this)">Management</button>
+                <button class="choice-btn" onclick="setCat('policy', this)">Policy</button>
+                <button class="choice-btn" onclick="setCat('wellbeing', this)">Wellbeing</button>
+            </div>
+
+            <label class="lbl">URGENCY</label>
+            <div class="btn-group" id="sev-group">
+                <button class="choice-btn" onclick="setSev('low', this)">Low</button>
+                <button class="choice-btn" onclick="setSev('medium', this)">Medium</button>
+                <button class="choice-btn" onclick="setSev('high', this)">High</button>
+            </div>
+
+            <label class="lbl">MESSAGE</label>
+            <textarea id="msg-input" class="msg-area" placeholder="Speak your truth..."></textarea>
+            <br><br>
+            <button class="submit-btn" onclick="submitReport()">SEND DISPATCH</button>
         </div>
-      </div>
-      <div class="form-group">
-        <span class="lbl">Urgency Level:</span>
-        <div class="sev-row">
-          <button class="sev-btn" data-sev="low">Low</button>
-          <button class="sev-btn" data-sev="medium">Med</button>
-          <button class="sev-btn" data-sev="high">High!!</button>
+    </div>
+
+    <div id="board" class="section">
+        <div id="board-content"></div>
+    </div>
+
+    <div id="admin" class="section">
+        <div id="admin-login" class="card" style="text-align:center;">
+            <label class="lbl">TOP SECRET ACCESS</label>
+            <input type="password" id="admin-pass" style="padding:10px; border:2px solid black; width:200px;"><br><br>
+            <button class="choice-btn" onclick="login()">ENTER HQ</button>
         </div>
-      </div>
-      <div class="form-group">
-        <span class="lbl">Voice Hub:</span>
-        <textarea class="msg-area" id="fb-text" placeholder="WRITE YOUR STORY HERE..."></textarea>
-      </div>
-      <div class="form-err" id="form-err" style="color:red; font-weight:bold; margin-bottom:10px;"></div>
-      <div class="flag-box" id="flag-box" style="display:none;">
-        <div class="flag-box-title" id="flag-title"></div>
-        <div class="flag-box-msg" id="flag-msg"></div>
-        <button class="edit-btn" id="edit-btn" style="margin-top:10px; padding:5px 10px; background:black; color:white; font-family:'Bangers'; cursor:pointer;">TRY AGAIN</button>
-      </div>
-      <button class="submit-btn" id="submit-btn">SEND TO HQ!</button>
+        <div id="admin-panel" style="display:none;">
+            <div id="admin-content"></div>
+        </div>
     </div>
-
-    <div class="success-msg" id="success-msg" style="display:none; text-align:center; background:var(--green); border:3px solid black; padding:2rem; box-shadow:10px 10px 0px black;">
-        <h3 style="font-family:'Bangers'; font-size:32px;">KAPOW! SENT!</h3>
-        <p style="font-weight:bold;">Your message has landed safely at HQ.</p>
-        <button class="back-link" id="back-link" style="margin-top:15px; background:black; color:white; padding:10px 20px; font-family:'Bangers'; cursor:pointer;">SUBMIT ANOTHER</button>
-    </div>
-  </div>
-
-  <div id="tab-board" class="section">
-    <div class="filter-row">
-      <button class="fchip on" data-filter="all">All</button>
-      <button class="fchip" data-filter="conflict">Conflict</button>
-      <button class="fchip" data-filter="management">Management</button>
-      <button class="fchip" data-filter="policy">Policy</button>
-      <button class="fchip" data-filter="wellbeing">Wellbeing</button>
-    </div>
-    <div class="board-grid" id="board-grid"></div>
-    <div class="empty-state" id="board-empty" style="display:none; text-align:center; font-family:'Bangers'; font-size:24px; margin-top:50px;">THE BOARD IS QUIET... TOO QUIET.</div>
-  </div>
-
-  <div id="tab-admin" class="section">
-    <div id="admin-gate">
-      <div class="gate-wrap">
-        <p style="font-family:'Bangers'; font-size:24px; margin-bottom:15px;">RESTRICTED AREA: ADMINS ONLY</p>
-        <input type="password" id="admin-pw" placeholder="PASSWORD" />
-        <div id="pw-err" style="color:red; font-weight:bold; margin:10px 0; display:none;">WRONG CODE, INTRUDER!</div>
-        <br><br>
-        <button id="login-btn">ACCESS HQ</button>
-      </div>
-    </div>
-    <div id="admin-panel" style="display:none;">
-      <div class="admin-hdr">
-        <h2 style="font-family:'Bangers'; font-size:32px;">COMMAND CENTER</h2>
-        <button class="logout-btn" id="logout-btn" style="background:red; color:white; padding:5px 15px; font-family:'Bangers'; cursor:pointer; border:2px solid black;">ABANDON SHIP</button>
-      </div>
-      <div class="stats-row" id="stats-row" style="margin: 20px 0;"></div>
-      <div id="admin-list"></div>
-    </div>
-  </div>
 </div>
 
 <script>
-// Logic remains identical to your original code
-const PASS='Chat2026';
-const catLabels={conflict:'Workplace conflict',management:'Management concerns',policy:'Policy / process issues',wellbeing:'Wellbeing & mental health'};
-const catBadge={conflict:'cc',management:'cm',policy:'cp',wellbeing:'cw'};
-const sevBadge={low:'sl',medium:'sm',high:'sh'};
-let selCat='',selSev='',curFilter='all';
+    // 1. DATA PERSISTENCE (LocalStorage)
+    // To make this work for "other people", you would replace this with a Fetch call to a database.
+    let reports = JSON.parse(localStorage.getItem('sh_reports')) || [];
+    let currentCat = '';
+    let currentSev = '';
 
-// Keeping your original content filters
-const HARD_BLOCK={
-  label:'ACCESS DENIED!',
-  message:'Your message contains forbidden language. Clean it up and try again, soldier!',
-  patterns:[
-    /\b(k[i1]ke|n[i1]gg[ae]r|ch[i1]nk|sp[i1]c|w[e3]tb[a4]ck|f[a4]gg[o0]t|tr[a4]nny|c[u]nt|r[a4]ghead|sand\s?n[i1]gg[ae]r|c[o0][o0]n|g[o0][o0]k|p[a4]ki|b[e3][a4]ner|cr[a4]ck[e3]r|h[o0][n]ky|j[i1]g[a4]b[o0][o0]|z[i1]p[p]erh[e3][a4]d|t[o0]wh[e3][a4]d|d[y]ke|l[e3]zz?[o0])\b/i,
-    /\b(kill all|death to|exterminate|gas the|lynch|bomb the mosque|burn the church|nuke)\b/i,
-    /\b(subhuman|vermin|parasite|infestation|cockroach|disease|plague)\s.*(people|them|they|those|immigrants|muslims|jews|christians|blacks|whites|gays)\b/i,
-  ]
-};
-
-const SOFT_FLAGS=[
-  {
-    label:'WATCH YOUR TONE!',
-    message:'This sounds a bit personal or discriminatory. Focus on the situation, not the person.',
-    patterns:[/\b(too old|too young|too female|too gay|too foreign|because (he|she|they) is|typical (man|woman|foreigner|immigrant))\b/i]
-  },
-  {
-    label:'CIVILITY ALERT!',
-    message:'Keep the attacks out of the HQ. State your grievance clearly and professionally.',
-    patterns:[/\b(idiot|moron|stupid|dumb|loser|pathetic|disgusting|worthless|incompetent fool|piece of|shut up)\b/i]
-  }
-];
-
-let data=[
-  {id:1,cat:'policy',sev:'medium',text:'The leave request process is unclear — different managers seem to have different rules. A written, standardised policy would help everyone.',date:'28 Mar 2026',resolved:false,removed:false,flagged:false,flagReason:'',reply:'',removalReason:''},
-  {id:2,cat:'wellbeing',sev:'high',text:'Workload during month-end has become unsustainable. Team members are regularly working past 7pm with no support.',date:'25 Mar 2026',resolved:false,removed:false,flagged:false,flagReason:'',reply:'HQ is looking into this. Hang in there!',removalReason:''},
-];
-let nid=3;
-
-function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-function checkContent(text){
-  for(const p of HARD_BLOCK.patterns){
-    if(p.test(text)) return {type:'hard',label:HARD_BLOCK.label,message:HARD_BLOCK.message};
-  }
-  for(const rule of SOFT_FLAGS){
-    for(const p of rule.patterns){
-      if(p.test(text)) return {type:'soft',label:rule.label,message:rule.message};
+    function save() {
+        localStorage.setItem('sh_reports', JSON.stringify(reports));
     }
-  }
-  return null;
-}
 
-function showTab(t){
-  ['submit','board','admin'].forEach(n=>{
-    document.getElementById('tab-'+n).style.display = (n===t) ? 'block' : 'none';
-    document.getElementById('tab-btn-'+n).classList.toggle('active',n===t);
-  });
-  if(t==='board') renderBoard();
-  if(t==='admin'&&document.getElementById('admin-panel').style.display==='block') renderAdmin();
-}
-
-document.getElementById('tab-btn-submit').addEventListener('click',()=>showTab('submit'));
-document.getElementById('tab-btn-board').addEventListener('click',()=>showTab('board'));
-document.getElementById('tab-btn-admin').addEventListener('click',()=>showTab('admin'));
-
-document.querySelectorAll('.cat-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    selCat=btn.dataset.cat;
-    document.querySelectorAll('.cat-btn').forEach(b=>b.className='cat-btn');
-    btn.classList.add('sel-'+selCat);
-  });
-});
-
-document.querySelectorAll('.sev-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    selSev=btn.dataset.sev;
-    document.querySelectorAll('.sev-btn').forEach(b=>b.className='sev-btn');
-    btn.classList.add('sel-'+selSev);
-  });
-});
-
-document.getElementById('edit-btn').addEventListener('click',()=>{
-  document.getElementById('flag-box').style.display='none';
-  document.getElementById('fb-text').focus();
-});
-
-document.getElementById('submit-btn').addEventListener('click',()=>{
-  const text=document.getElementById('fb-text').value.trim();
-  const err=document.getElementById('form-err');
-  const flagBox=document.getElementById('flag-box');
-  flagBox.style.display='none';
-  err.style.display='none';
-
-  if(!selCat || !selSev || text.length < 20){
-    err.textContent='YOU MISSED SOMETHING! CHECK THE FORM!';
-    err.style.display='block';
-    return;
-  }
-
-  const check=checkContent(text);
-  if(check){
-    document.getElementById('flag-title').textContent=check.label;
-    document.getElementById('flag-msg').textContent=check.message;
-    flagBox.style.display='block';
-    return;
-  }
-
-  const now=new Date();
-  const d=now.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][now.getMonth()]+' '+now.getFullYear();
-  data.unshift({id:nid++,cat:selCat,sev:selSev,text,date:d,resolved:false,removed:false,flagged:false,flagReason:'',reply:'',removalReason:''});
-  document.getElementById('submit-form-area').style.display='none';
-  document.getElementById('success-msg').style.display='block';
-});
-
-document.getElementById('back-link').addEventListener('click',()=>{
-  document.getElementById('submit-form-area').style.display='block';
-  document.getElementById('success-msg').style.display='none';
-  document.getElementById('fb-text').value='';
-  selCat='';selSev='';
-  document.querySelectorAll('.cat-btn').forEach(b=>b.className='cat-btn');
-  document.querySelectorAll('.sev-btn').forEach(b=>b.className='sev-btn');
-});
-
-document.querySelectorAll('.fchip').forEach(chip=>{
-  chip.addEventListener('click',()=>{
-    curFilter=chip.dataset.filter;
-    document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('on'));
-    chip.classList.add('on');
-    renderBoard();
-  });
-});
-
-document.getElementById('login-btn').addEventListener('click',()=>{
-  if(document.getElementById('admin-pw').value===PASS){
-    document.getElementById('admin-gate').style.display='none';
-    document.getElementById('admin-panel').style.display='block';
-    renderAdmin();
-  } else {
-    document.getElementById('pw-err').style.display='block';
-  }
-});
-
-document.getElementById('logout-btn').addEventListener('click',()=>{
-  document.getElementById('admin-gate').style.display='block';
-  document.getElementById('admin-panel').style.display='none';
-  document.getElementById('admin-pw').value='';
-});
-
-function renderBoard(){
-  const grid=document.getElementById('board-grid');
-  const empty=document.getElementById('board-empty');
-  const items=data.filter(f=>curFilter==='all'||f.cat===curFilter);
-  if(!items.length){grid.innerHTML='';empty.style.display='block';return;}
-  empty.style.display='none';
-  grid.innerHTML=items.map(f=>{
-    if(f.removed) return `<div class="fb-card" style="border-style:dashed; opacity:0.6;">
-      <p style="font-family:'Bangers'; color:red;">[ REDACTED BY HQ ]</p>
-      <p style="font-style:italic;">Reason: ${esc(f.removalReason)}</p>
-    </div>`;
-    return `<div class="fb-card">
-      <div style="display:flex; justify-content:space-between;">
-        <div><span class="cat-badge ${catBadge[f.cat]}">${catLabels[f.cat]}</span><span class="cat-badge ${sevBadge[f.sev]}">${f.sev.toUpperCase()}</span></div>
-        <span style="font-family:'Bangers'; font-size:12px;">${f.date}</span>
-      </div>
-      <p class="fb-text">${esc(f.text)}</p>
-      ${f.reply?`<div style="margin-top:10px; padding:10px; background:var(--yellow); border-left:5px solid black;">
-        <div style="font-family:'Bangers'; font-size:14px;">HQ RESPONSE:</div>
-        <div style="font-weight:bold;">${esc(f.reply)}</div>
-      </div>`:''}
-    </div>`;
-  }).join('');
-}
-
-function renderAdmin(){
-  document.getElementById('stats-row').innerHTML=`
-    <div class="stat-box"><div class="num">${data.length}</div><div class="lbl">Total</div></div>
-    <div class="stat-box"><div class="num">${data.filter(f=>!f.resolved&&!f.removed).length}</div><div class="lbl">Open</div></div>
-    <div class="stat-box"><div class="num">${data.filter(f=>f.sev==='high'&&!f.removed).length}</div><div class="lbl">High Alert</div></div>
-  `;
-  document.getElementById('admin-list').innerHTML=data.map(f=>`
-    <div class="fb-card" style="margin-bottom:20px;">
-      <div style="font-family:'Bangers';">${f.date} | ${f.cat.toUpperCase()} | ${f.sev.toUpperCase()}</div>
-      <p class="fb-text">${esc(f.text)}</p>
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button class="act" onclick="toggleStatus(${f.id})" style="background:var(--green);">${f.resolved?'Reopen':'Resolve'}</button>
-        <button class="act" onclick="promptRemoval(${f.id})" style="background:var(--red); color:white;">Remove</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-window.toggleStatus = (id) => {
-    const item = data.find(x => x.id === id);
-    item.resolved = !item.resolved;
-    renderAdmin();
-}
-
-window.promptRemoval = (id) => {
-    const reason = prompt("Why are you removing this dispatch?");
-    if(reason) {
-        const item = data.find(x => x.id === id);
-        item.removed = true;
-        item.removalReason = reason;
-        renderAdmin();
+    function openTab(tabId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        if(tabId === 'board') renderBoard();
+        if(tabId === 'admin') renderAdmin();
     }
-}
+
+    function setCat(val, btn) {
+        currentCat = val;
+        document.querySelectorAll('#cat-group .choice-btn').forEach(b => b.className = 'choice-btn');
+        btn.classList.add('sel-' + val);
+    }
+
+    function setSev(val, btn) {
+        currentSev = val;
+        document.querySelectorAll('#sev-group .choice-btn').forEach(b => b.className = 'choice-btn');
+        btn.classList.add('sel-' + val);
+    }
+
+    function submitReport() {
+        const text = document.getElementById('msg-input').value;
+        if(!currentCat || !currentSev || !text) return alert("Fill everything out!");
+
+        const newReport = {
+            id: Date.now(),
+            cat: currentCat,
+            sev: currentSev,
+            text: text,
+            date: new Date().toLocaleDateString(),
+            removed: false,
+            reason: ''
+        };
+
+        reports.unshift(newReport);
+        save();
+        alert("KAPOW! Message sent.");
+        location.reload(); 
+    }
+
+    function renderBoard() {
+        const container = document.getElementById('board-content');
+        container.innerHTML = reports.map(r => `
+            <div class="card" style="${r.removed ? 'opacity:0.5; border-style:dashed;' : ''}">
+                ${r.removed ? 
+                    `<h2 style="font-family:Bangers; color:red;">[ REDACTED BY ADMIN ]</h2><p>Reason: ${r.reason}</p>` : 
+                    `<div>
+                        <span class="badge sel-${r.cat}">${r.cat.toUpperCase()}</span>
+                        <span class="badge sel-${r.sev}">${r.sev.toUpperCase()}</span>
+                    </div>
+                    <p style="font-size:18px; font-weight:bold;">${r.text}</p>
+                    <small>${r.date}</small>`
+                }
+            </div>
+        `).join('');
+    }
+
+    function renderAdmin() {
+        const container = document.getElementById('admin-content');
+        container.innerHTML = reports.map(r => `
+            <div class="card">
+                <p><strong>ID: ${r.id}</strong> [${r.cat}]</p>
+                <p>${r.text}</p>
+                <button class="act-btn btn-soft" onclick="softRemove(${r.id})">Soft Remove</button>
+                <button class="act-btn btn-delete" onclick="hardDelete(${r.id})">DELETE PERMANENTLY</button>
+            </div>
+        `).join('');
+    }
+
+    function softRemove(id) {
+        const reason = prompt("Why are you removing this from the public board?");
+        if(reason) {
+            const r = reports.find(x => x.id === id);
+            r.removed = true;
+            r.reason = reason;
+            save();
+            renderAdmin();
+        }
+    }
+
+    function hardDelete(id) {
+        if(confirm("DANGER! This deletes the data forever from the system. Proceed?")) {
+            reports = reports.filter(x => x.id !== id);
+            save();
+            renderAdmin();
+        }
+    }
+
+    function login() {
+        if(document.getElementById('admin-pass').value === 'Chat2026') {
+            document.getElementById('admin-login').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            renderAdmin();
+        } else {
+            alert("WRONG PASSWORD!");
+        }
+    }
 </script>
+
+</body>
+</html>
