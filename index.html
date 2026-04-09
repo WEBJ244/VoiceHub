@@ -3,94 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Hub | Soft Retro</title>
+    <title>Voice Hub | Secure Retro</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap');
 
         :root {
-            /* Soft Retro Palette - Easy on the eyes */
             --retro-cream: #FDF5E6;
             --retro-teal: #92C5C5;
             --retro-salmon: #F2A6A6;
             --retro-sand: #E6D5B8;
             --ink: #333333;
-            --halftone: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 0);
         }
 
         body {
             background-color: var(--retro-cream);
-            background-image: var(--halftone);
+            background-image: radial-gradient(rgba(0,0,0,0.05) 1.5px, transparent 0);
             background-size: 15px 15px;
             font-family: 'Comic Neue', cursive;
             margin: 0; padding: 0; color: var(--ink);
         }
 
-        .portal { max-width: 750px; margin: 0 auto; padding: 2rem 1rem; }
+        .portal { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
 
-        /* Soft Header */
         .header {
             text-align: center; background: var(--retro-sand);
-            border: 3px solid var(--ink); padding: 1.5rem;
-            margin-bottom: 2rem; box-shadow: 8px 8px 0px var(--ink);
-            transform: rotate(-0.5deg);
+            border: 4px solid var(--ink); padding: 1.5rem;
+            margin-bottom: 2rem; box-shadow: 10px 10px 0px var(--ink);
         }
 
-        .brand-name { font-family: 'Bangers', cursive; font-size: 55px; margin: 0; letter-spacing: 2px; }
+        .brand-name { font-family: 'Bangers', cursive; font-size: 60px; margin: 0; }
 
-        /* Tabs */
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
         .tab {
-            flex: 1; padding: 12px; font-family: 'Bangers', cursive; font-size: 20px;
-            border: 3px solid var(--ink); background: white; cursor: pointer;
-            box-shadow: 4px 4px 0px var(--ink); transition: 0.2s;
+            flex: 1; padding: 15px; font-family: 'Bangers', cursive; font-size: 22px;
+            border: 4px solid var(--ink); background: white; cursor: pointer;
+            box-shadow: 5px 5px 0px var(--ink);
         }
-        .tab.active { background: var(--retro-teal); transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--ink); }
+        .tab.active { background: var(--retro-teal); transform: translate(3px, 3px); box-shadow: 2px 2px 0px var(--ink); }
 
         .section { display: none; }
         .section.active { display: block; }
 
-        /* Soft Cards */
         .card {
-            background: white; border: 3px solid var(--ink);
-            padding: 20px; margin-bottom: 20px; box-shadow: 6px 6px 0px var(--ink);
+            background: white; border: 4px solid var(--ink);
+            padding: 25px; margin-bottom: 25px; box-shadow: 8px 8px 0px var(--ink);
         }
 
-        .lbl { font-family: 'Bangers', cursive; font-size: 22px; display: block; margin-bottom: 10px; color: var(--ink); }
+        /* Safety Rules Styling */
+        .rules-box {
+            background: #fffbe6; border: 3px dashed var(--ink);
+            padding: 15px; margin-bottom: 20px;
+        }
+        .rules-header { font-family: 'Bangers'; color: var(--retro-salmon); font-size: 20px; }
+
+        .lbl { font-family: 'Bangers', cursive; font-size: 24px; display: block; margin-bottom: 12px; }
         
         .choice-btn {
-            padding: 8px 16px; border: 2px solid var(--ink);
-            font-family: 'Bangers', cursive; font-size: 16px; cursor: pointer; background: white;
-            box-shadow: 3px 3px 0px var(--ink); margin-right: 8px; margin-bottom: 8px;
+            padding: 10px 20px; border: 3px solid var(--ink);
+            font-family: 'Bangers', cursive; font-size: 18px; cursor: pointer; background: white;
+            box-shadow: 4px 4px 0px var(--ink); margin-right: 10px; margin-bottom: 10px;
         }
 
-        /* Status Colors */
-        .sel-med, .sel-management { background: var(--retro-sand) !important; }
-        .sel-high, .sel-conflict { background: var(--retro-salmon) !important; }
-        .sel-low, .sel-wellbeing { background: var(--retro-teal) !important; }
-
-        .msg-area { 
-            width: 100%; height: 100px; border: 3px solid var(--ink); 
-            padding: 12px; font-family: inherit; font-size: 16px; margin-bottom: 10px;
-        }
-
+        .sel-active { background: var(--retro-teal) !important; }
         .submit-btn {
-            width: 100%; padding: 15px; background: var(--retro-salmon);
-            font-family: 'Bangers', cursive; font-size: 26px; border: 3px solid var(--ink);
-            cursor: pointer; box-shadow: 4px 4px 0px var(--ink);
+            width: 100%; padding: 20px; background: var(--retro-salmon);
+            font-family: 'Bangers', cursive; font-size: 32px; border: 4px solid var(--ink);
+            cursor: pointer; box-shadow: 6px 6px 0px var(--ink);
         }
 
-        .status-tag { font-family: 'Bangers'; padding: 2px 8px; border: 2px solid var(--ink); float: right; font-size: 14px; }
-        .admin-controls { display: flex; gap: 5px; margin-top: 10px; }
+        .status-tag { font-family: 'Bangers'; padding: 4px 10px; border: 2px solid var(--ink); float: right; background: var(--retro-sand); }
     </style>
 </head>
 <body>
 
 <div class="portal">
-    <div class="header">
-        <h1 class="brand-name">VOICE HUB</h1>
-    </div>
+    <div class="header"><h1 class="brand-name">VOICE HUB</h1></div>
 
     <div class="tabs">
         <button class="tab active" onclick="showTab('submit', this)">DISPATCH</button>
@@ -99,21 +88,30 @@
     </div>
 
     <div id="submit" class="section active">
+        <div class="rules-box">
+            <span class="rules-header">🛡️ SAFETY PROTOCOLS</span>
+            <ul style="margin: 10px 0 0 20px; font-weight: bold;">
+                <li>Keep it Anonymous: No real names or identifying info.</li>
+                <li>Stay Safe: Use this space for constructive feedback, not harassment.</li>
+                <li>Privacy: Data is stored securely and monitored for safety.</li>
+            </ul>
+        </div>
+
         <div class="card">
             <label class="lbl">CATEGORY</label>
             <div id="cat-group">
-                <button class="choice-btn" onclick="setCat('conflict', this)">Conflict</button>
-                <button class="choice-btn" onclick="setCat('management', this)">Management</button>
-                <button class="choice-btn" onclick="setCat('wellbeing', this)">Wellbeing</button>
+                <button class="choice-btn" onclick="setVal('cat', 'Conflict', this)">Conflict</button>
+                <button class="choice-btn" onclick="setVal('cat', 'Management', this)">Management</button>
+                <button class="choice-btn" onclick="setVal('cat', 'Policy', this)">Policy</button>
             </div>
             <label class="lbl">URGENCY</label>
             <div id="sev-group">
-                <button class="choice-btn" onclick="setSev('low', this)">Low</button>
-                <button class="choice-btn" onclick="setSev('medium', this)">Medium</button>
-                <button class="choice-btn" onclick="setSev('high', this)">High</button>
+                <button class="choice-btn" onclick="setVal('sev', 'Low', this)">Low</button>
+                <button class="choice-btn" onclick="setVal('sev', 'Medium', this)">Medium</button>
+                <button class="choice-btn" onclick="setVal('sev', 'High', this)">High</button>
             </div>
-            <textarea id="fb-text" class="msg-area" placeholder="Enter dispatch details..."></textarea>
-            <button class="submit-btn" onclick="submitReport()">SEND TO HUB</button>
+            <textarea id="fb-text" style="width:100%; height:120px; border:3px solid var(--ink); padding:10px; margin-bottom:15px; box-sizing: border-box;" placeholder="Enter dispatch details..."></textarea>
+            <button class="submit-btn" onclick="submitToFirebase()">SEND DISPATCH</button>
         </div>
     </div>
 
@@ -123,19 +121,23 @@
 
     <div id="admin" class="section">
         <div id="admin-gate" class="card" style="text-align:center;">
-            <label class="lbl">KEY REQUIRED</label>
-            <input type="password" id="admin-pw" style="padding:8px; border:2px solid black;">
-            <button class="choice-btn" onclick="login()">ENTER</button>
+            <label class="lbl">ADMIN KEY</label>
+            <input type="password" id="admin-pw" style="padding:10px; font-size:18px; border:3px solid black;">
+            <br><br>
+            <button class="choice-btn" onclick="tryLogin()">UNLOCK HQ</button>
         </div>
         <div id="admin-panel" style="display:none;">
-            <button class="choice-btn" style="float:right;" onclick="logout()">LOGOUT</button>
-            <label class="lbl">HQ DASHBOARD</label>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <label class="lbl">HQ DASHBOARD</label>
+                <button class="choice-btn" style="background:var(--retro-salmon);" onclick="logout()">SECURE LOGOUT</button>
+            </div>
             <div id="admin-list"></div>
         </div>
     </div>
 </div>
 
 <script>
+    // Configuration from your previous session
     const firebaseConfig = {
         apiKey: "AIzaSyCg5LSNh0EIKjv5eQKPpWT8ZMF49zQX9Dc",
         authDomain: "voice-hub-portal.firebaseapp.com",
@@ -150,7 +152,7 @@
     const db = firebase.database();
     const reportsRef = db.ref('reports');
 
-    let selCat = ''; let selSev = '';
+    let selections = { cat: '', sev: '' };
 
     function showTab(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -159,81 +161,316 @@
         btn.classList.add('active');
     }
 
-    function setCat(val, btn) {
-        selCat = val;
-        document.querySelectorAll('#cat-group .choice-btn').forEach(b => b.classList.remove('sel-low','sel-wellbeing','sel-conflict'));
-        btn.classList.add('sel-low'); 
+    function setVal(type, val, btn) {
+        selections[type] = val;
+        document.querySelectorAll(`#${type}-group .choice-btn`).forEach(b => b.classList.remove('sel-active'));
+        btn.classList.add('sel-active');
     }
 
-    function setSev(val, btn) {
-        selSev = val;
-        document.querySelectorAll('#sev-group .choice-btn').forEach(b => b.classList.remove('sel-low','sel-med','sel-high'));
-        btn.classList.add(val === 'medium' ? 'sel-med' : (val === 'high' ? 'sel-high' : 'sel-low'));
-    }
-
-    function submitReport() {
+    function submitToFirebase() {
         const text = document.getElementById('fb-text').value;
-        if(!selCat || !selSev || !text) return alert("Fields missing!");
+        if(!selections.cat || !selections.sev || !text) return alert("All fields are mandatory!");
         reportsRef.push({ 
-            cat: selCat, sev: selSev, text: text, 
+            cat: selections.cat, 
+            sev: selections.sev, 
+            text: text, 
             date: new Date().toLocaleDateString(), 
-            status: 'active', comment: '' 
+            status: 'active' 
         });
         document.getElementById('fb-text').value = '';
-        alert("Dispatched!");
+        alert("Dispatch Sent!");
     }
 
-    function login() {
+    function tryLogin() {
         if(document.getElementById('admin-pw').value === 'Chat2026') {
             document.getElementById('admin-gate').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'block';
-        }
+        } else { alert("ACCESS DENIED"); }
     }
 
     function logout() {
+        // 1. Clear the password box for security
+        document.getElementById('admin-pw').value = '';
+        // 2. Return to the gate, but the 'admin-list' remains populated in the background
         document.getElementById('admin-panel').style.display = 'none';
         document.getElementById('admin-gate').style.display = 'block';
     }
 
-    function updateItem(id, status) {
-        let com = prompt("Admin Comment:");
-        if(com !== null) db.ref('reports/'+id).update({status: status, comment: com});
+    function updateItem(id, s) { 
+        let c = prompt("Admin Note:"); 
+        if(c !== null) db.ref('reports/'+id).update({status: s, comment: c}); 
     }
 
-    function killItem(id) {
-        if(confirm("Delete forever?")) db.ref('reports/'+id).remove();
+    function deleteItem(id) {
+        if(confirm("Confirm Deletion?")) db.ref('reports/'+id).remove();
     }
 
-    // This is the listener that makes data "show up"
+    // Data Listener for Real-Time Updates
     reportsRef.on('value', (snap) => {
         const data = snap.val();
         const grid = document.getElementById('board-grid');
         const adminGrid = document.getElementById('admin-list');
         grid.innerHTML = ''; adminGrid.innerHTML = '';
+        if(!data) return;
 
-        for(let id in data) {
+        Object.keys(data).reverse().forEach(id => {
             const r = data[id];
-            const removed = r.status === 'removed';
+            // Public Card
+            grid.innerHTML += `
+                <div class="card">
+                    <span class="status-tag">${r.status.toUpperCase()}</span>
+                    <label class="lbl" style="font-size:16px;">${r.cat} | ${r.sev}</label>
+                    <p style="font-size:20px; font-weight:bold; margin:10px 0;">"${r.text}"</p>
+                    ${r.comment ? `<p style="color:var(--retro-salmon); font-family:'Permanent Marker';">Note: ${r.comment}</p>` : ''}
+                    <small>${r.date}</small>
+                </div>`;
             
-            // Public View
-            grid.innerHTML = `<div class="card" style="${removed ? 'opacity:0.5' : ''}">
-                <span class="status-tag">${r.status.toUpperCase()}</span>
-                <p><b>[${r.cat.toUpperCase()}]</b></p>
-                <p>${removed ? '--- Content Removed ---' : r.text}</p>
-                ${r.comment ? `<p style="color:red"><i>Note: ${r.comment}</i></p>` : ''}
-                <small>${r.date}</small>
-            </div>` + grid.innerHTML;
+            // Admin Card
+            adminGrid.innerHTML += `
+                <div class="card">
+                    <p><b>${r.text}</b></p>
+                    <button class="choice-btn" onclick="updateItem('${id}','resolved')">Resolve</button>
+                    <button class="choice-btn" onclick="deleteItem('${id}')">Delete</button>
+                </div>`;
+        });
+    });
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Hub | Secure Retro</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap');
 
-            // Admin View
-            adminGrid.innerHTML = `<div class="card">
-                <p>${r.text}</p>
-                <div class="admin-controls">
-                    <button class="choice-btn" onclick="updateItem('${id}', 'resolved')">Resolve</button>
-                    <button class="choice-btn" onclick="updateItem('${id}', 'removed')">Soft Remove</button>
-                    <button class="choice-btn" onclick="killItem('${id}')">Delete</button>
-                </div>
-            </div>` + adminGrid.innerHTML;
+        :root {
+            --retro-cream: #FDF5E6;
+            --retro-teal: #92C5C5;
+            --retro-salmon: #F2A6A6;
+            --retro-sand: #E6D5B8;
+            --ink: #333333;
         }
+
+        body {
+            background-color: var(--retro-cream);
+            background-image: radial-gradient(rgba(0,0,0,0.05) 1.5px, transparent 0);
+            background-size: 15px 15px;
+            font-family: 'Comic Neue', cursive;
+            margin: 0; padding: 0; color: var(--ink);
+        }
+
+        .portal { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
+
+        .header {
+            text-align: center; background: var(--retro-sand);
+            border: 4px solid var(--ink); padding: 1.5rem;
+            margin-bottom: 2rem; box-shadow: 10px 10px 0px var(--ink);
+        }
+
+        .brand-name { font-family: 'Bangers', cursive; font-size: 60px; margin: 0; }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab {
+            flex: 1; padding: 15px; font-family: 'Bangers', cursive; font-size: 22px;
+            border: 4px solid var(--ink); background: white; cursor: pointer;
+            box-shadow: 5px 5px 0px var(--ink);
+        }
+        .tab.active { background: var(--retro-teal); transform: translate(3px, 3px); box-shadow: 2px 2px 0px var(--ink); }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .card {
+            background: white; border: 4px solid var(--ink);
+            padding: 25px; margin-bottom: 25px; box-shadow: 8px 8px 0px var(--ink);
+        }
+
+        /* Safety Rules Styling */
+        .rules-box {
+            background: #fffbe6; border: 3px dashed var(--ink);
+            padding: 15px; margin-bottom: 20px;
+        }
+        .rules-header { font-family: 'Bangers'; color: var(--retro-salmon); font-size: 20px; }
+
+        .lbl { font-family: 'Bangers', cursive; font-size: 24px; display: block; margin-bottom: 12px; }
+        
+        .choice-btn {
+            padding: 10px 20px; border: 3px solid var(--ink);
+            font-family: 'Bangers', cursive; font-size: 18px; cursor: pointer; background: white;
+            box-shadow: 4px 4px 0px var(--ink); margin-right: 10px; margin-bottom: 10px;
+        }
+
+        .sel-active { background: var(--retro-teal) !important; }
+        .submit-btn {
+            width: 100%; padding: 20px; background: var(--retro-salmon);
+            font-family: 'Bangers', cursive; font-size: 32px; border: 4px solid var(--ink);
+            cursor: pointer; box-shadow: 6px 6px 0px var(--ink);
+        }
+
+        .status-tag { font-family: 'Bangers'; padding: 4px 10px; border: 2px solid var(--ink); float: right; background: var(--retro-sand); }
+    </style>
+</head>
+<body>
+
+<div class="portal">
+    <div class="header"><h1 class="brand-name">VOICE HUB</h1></div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('submit', this)">DISPATCH</button>
+        <button class="tab" onclick="showTab('board', this)">THE HUB</button>
+        <button class="tab" onclick="showTab('admin', this)">ADMIN HQ</button>
+    </div>
+
+    <div id="submit" class="section active">
+        <div class="rules-box">
+            <span class="rules-header">🛡️ SAFETY PROTOCOLS</span>
+            <ul style="margin: 10px 0 0 20px; font-weight: bold;">
+                <li>Keep it Anonymous: No real names or identifying info.</li>
+                <li>Stay Safe: Use this space for constructive feedback, not harassment.</li>
+                <li>Privacy: Data is stored securely and monitored for safety.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <label class="lbl">CATEGORY</label>
+            <div id="cat-group">
+                <button class="choice-btn" onclick="setVal('cat', 'Conflict', this)">Conflict</button>
+                <button class="choice-btn" onclick="setVal('cat', 'Management', this)">Management</button>
+                <button class="choice-btn" onclick="setVal('cat', 'Policy', this)">Policy</button>
+            </div>
+            <label class="lbl">URGENCY</label>
+            <div id="sev-group">
+                <button class="choice-btn" onclick="setVal('sev', 'Low', this)">Low</button>
+                <button class="choice-btn" onclick="setVal('sev', 'Medium', this)">Medium</button>
+                <button class="choice-btn" onclick="setVal('sev', 'High', this)">High</button>
+            </div>
+            <textarea id="fb-text" style="width:100%; height:120px; border:3px solid var(--ink); padding:10px; margin-bottom:15px; box-sizing: border-box;" placeholder="Enter dispatch details..."></textarea>
+            <button class="submit-btn" onclick="submitToFirebase()">SEND DISPATCH</button>
+        </div>
+    </div>
+
+    <div id="board" class="section">
+        <div id="board-grid"></div>
+    </div>
+
+    <div id="admin" class="section">
+        <div id="admin-gate" class="card" style="text-align:center;">
+            <label class="lbl">ADMIN KEY</label>
+            <input type="password" id="admin-pw" style="padding:10px; font-size:18px; border:3px solid black;">
+            <br><br>
+            <button class="choice-btn" onclick="tryLogin()">UNLOCK HQ</button>
+        </div>
+        <div id="admin-panel" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <label class="lbl">HQ DASHBOARD</label>
+                <button class="choice-btn" style="background:var(--retro-salmon);" onclick="logout()">SECURE LOGOUT</button>
+            </div>
+            <div id="admin-list"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configuration from your previous session
+    const firebaseConfig = {
+        apiKey: "AIzaSyCg5LSNh0EIKjv5eQKPpWT8ZMF49zQX9Dc",
+        authDomain: "voice-hub-portal.firebaseapp.com",
+        databaseURL: "https://voice-hub-portal-default-rtdb.firebaseio.com",
+        projectId: "voice-hub-portal",
+        storageBucket: "voice-hub-portal.firebasestorage.app",
+        messagingSenderId: "1052590708905",
+        appId: "1:1052590708905:web:50237423f82a3c4ceeb1b8"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const reportsRef = db.ref('reports');
+
+    let selections = { cat: '', sev: '' };
+
+    function showTab(id, btn) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function setVal(type, val, btn) {
+        selections[type] = val;
+        document.querySelectorAll(`#${type}-group .choice-btn`).forEach(b => b.classList.remove('sel-active'));
+        btn.classList.add('sel-active');
+    }
+
+    function submitToFirebase() {
+        const text = document.getElementById('fb-text').value;
+        if(!selections.cat || !selections.sev || !text) return alert("All fields are mandatory!");
+        reportsRef.push({ 
+            cat: selections.cat, 
+            sev: selections.sev, 
+            text: text, 
+            date: new Date().toLocaleDateString(), 
+            status: 'active' 
+        });
+        document.getElementById('fb-text').value = '';
+        alert("Dispatch Sent!");
+    }
+
+    function tryLogin() {
+        if(document.getElementById('admin-pw').value === 'Chat2026') {
+            document.getElementById('admin-gate').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+        } else { alert("ACCESS DENIED"); }
+    }
+
+    function logout() {
+        // 1. Clear the password box for security
+        document.getElementById('admin-pw').value = '';
+        // 2. Return to the gate, but the 'admin-list' remains populated in the background
+        document.getElementById('admin-panel').style.display = 'none';
+        document.getElementById('admin-gate').style.display = 'block';
+    }
+
+    function updateItem(id, s) { 
+        let c = prompt("Admin Note:"); 
+        if(c !== null) db.ref('reports/'+id).update({status: s, comment: c}); 
+    }
+
+    function deleteItem(id) {
+        if(confirm("Confirm Deletion?")) db.ref('reports/'+id).remove();
+    }
+
+    // Data Listener for Real-Time Updates
+    reportsRef.on('value', (snap) => {
+        const data = snap.val();
+        const grid = document.getElementById('board-grid');
+        const adminGrid = document.getElementById('admin-list');
+        grid.innerHTML = ''; adminGrid.innerHTML = '';
+        if(!data) return;
+
+        Object.keys(data).reverse().forEach(id => {
+            const r = data[id];
+            // Public Card
+            grid.innerHTML += `
+                <div class="card">
+                    <span class="status-tag">${r.status.toUpperCase()}</span>
+                    <label class="lbl" style="font-size:16px;">${r.cat} | ${r.sev}</label>
+                    <p style="font-size:20px; font-weight:bold; margin:10px 0;">"${r.text}"</p>
+                    ${r.comment ? `<p style="color:var(--retro-salmon); font-family:'Permanent Marker';">Note: ${r.comment}</p>` : ''}
+                    <small>${r.date}</small>
+                </div>`;
+            
+            // Admin Card
+            adminGrid.innerHTML += `
+                <div class="card">
+                    <p><b>${r.text}</b></p>
+                    <button class="choice-btn" onclick="updateItem('${id}','resolved')">Resolve</button>
+                    <button class="choice-btn" onclick="deleteItem('${id}')">Delete</button>
+                </div>`;
+        });
     });
 </script>
 </body>
