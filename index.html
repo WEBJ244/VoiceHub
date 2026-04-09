@@ -51,7 +51,6 @@
             padding: 25px; margin-bottom: 25px; box-shadow: 8px 8px 0px var(--ink);
         }
 
-        /* Red Highlight for Soft Removed Content */
         .removed-card {
             background-color: #fff0f0 !important;
             border-color: var(--retro-salmon) !important;
@@ -84,6 +83,11 @@
             margin-top: 15px; padding: 10px; border-left: 5px solid var(--retro-salmon);
             background: #ffe6e6; font-family: 'Permanent Marker', cursive; font-size: 18px;
         }
+
+        .admin-input {
+            width: 100%; padding: 8px; border: 2px solid var(--ink);
+            margin-bottom: 10px; font-family: 'Comic Neue';
+        }
     </style>
 </head>
 <body>
@@ -94,7 +98,7 @@
     <div class="tabs">
         <button class="tab active" onclick="showTab('submit', this)">DISPATCH</button>
         <button class="tab" onclick="showTab('board', this)">THE HUB</button>
-        <button class="tab" onclick="showTab('admin', this)">ADMIN HQ</button>
+        <button class="tab" onclick="showTab('admin', this)">ADMIN</button>
     </div>
 
     <div id="submit" class="section active">
@@ -113,6 +117,7 @@
                 <button class="choice-btn" onclick="setVal('cat', 'Conflict', this)">Conflict</button>
                 <button class="choice-btn" onclick="setVal('cat', 'Management', this)">Management</button>
                 <button class="choice-btn" onclick="setVal('cat', 'Policy', this)">Policy</button>
+                <button class="choice-btn" onclick="setVal('cat', 'Wellbeing', this)">Wellbeing</button>
             </div>
             <label class="lbl">URGENCY</label>
             <div id="sev-group">
@@ -134,11 +139,11 @@
             <label class="lbl">ADMIN KEY</label>
             <input type="password" id="admin-pw" style="padding:10px; font-size:18px; border:3px solid black;">
             <br><br>
-            <button class="choice-btn" onclick="tryLogin()">UNLOCK HQ</button>
+            <button class="choice-btn" onclick="tryLogin()">UNLOCK ADMIN</button>
         </div>
         <div id="admin-panel" style="display:none;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <label class="lbl">HQ DASHBOARD</label>
+                <label class="lbl">ADMIN DASHBOARD</label>
                 <button class="choice-btn" style="background:var(--retro-salmon);" onclick="logout()">SECURE LOGOUT</button>
             </div>
             <div id="admin-list"></div>
@@ -204,19 +209,10 @@
         document.getElementById('admin-gate').style.display = 'block';
     }
 
-    // New Soft Remove Function
-    function softRemove(id) {
-        let reason = prompt("Enter Admin Reason for Hiding this Dispatch:");
-        if(reason !== null) {
-            db.ref('reports/' + id).update({ status: 'removed', comment: reason });
-        }
-    }
-
-    function resolveItem(id) {
-        let note = prompt("Admin Resolution Note:");
-        if(note !== null) {
-            db.ref('reports/' + id).update({ status: 'resolved', comment: note });
-        }
+    function updateItem(id, s) { 
+        const commentBox = document.getElementById('comment-' + id);
+        const comment = commentBox.value;
+        db.ref('reports/'+id).update({status: s, comment: comment}); 
     }
 
     function deleteItem(id) {
@@ -242,18 +238,18 @@
                     <p style="font-size:20px; font-weight:bold; margin:10px 0;">
                         ${isRemoved ? '[ CONTENT HIDDEN BY MODERATOR ]' : `"${r.text}"`}
                     </p>
-                    ${r.comment ? `<div class="admin-note">HQ NOTE: ${r.comment}</div>` : ''}
+                    ${r.comment ? `<div class="admin-note">ADMIN FEEDBACK: ${r.comment}</div>` : ''}
                     <small>${r.date}</small>
                 </div>`;
             
-            // Admin HQ Card
+            // Admin Card
             adminGrid.innerHTML += `
                 <div class="card">
                     <p><b>Original Text:</b> ${r.text}</p>
-                    <p><small>ID: ${id} | Status: ${r.status}</small></p>
+                    <input type="text" id="comment-${id}" class="admin-input" placeholder="Add feedback/reason for user..." value="${r.comment || ''}">
                     <div style="margin-top:10px;">
-                        <button class="choice-btn" style="background:#ccffcc;" onclick="resolveItem('${id}')">Resolve</button>
-                        <button class="choice-btn" style="background:#ffcccc;" onclick="softRemove('${id}')">Soft Remove</button>
+                        <button class="choice-btn" style="background:#ccffcc;" onclick="updateItem('${id}','resolved')">Resolve</button>
+                        <button class="choice-btn" style="background:#ffcccc;" onclick="updateItem('${id}','removed')">Soft Remove</button>
                         <button class="choice-btn" style="background:#000; color:#fff;" onclick="deleteItem('${id}')">Hard Delete</button>
                     </div>
                 </div>`;
