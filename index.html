@@ -15,7 +15,6 @@
             --comic-red: #FF6B6B;
             --ink-black: #222222;
             --border-thick: 3px;
-            /* Halftone pattern inspired by your comic reference */
             --halftone: radial-gradient(rgba(0,0,0,0.1) 1px, transparent 0);
         }
 
@@ -24,158 +23,123 @@
             background-image: var(--halftone);
             background-size: 20px 20px;
             font-family: 'Comic Neue', cursive;
-            color: var(--ink-black);
             margin: 0; padding: 0;
         }
 
         .portal { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; }
 
+        /* Updated Header with Ping Icon */
         .header {
             text-align: center;
             background: var(--comic-yellow);
             border: var(--border-thick) solid var(--ink-black);
-            padding: 2rem;
+            padding: 1.5rem;
             margin-bottom: 2rem;
             box-shadow: 12px 12px 0px var(--ink-black);
             transform: rotate(-1deg);
         }
 
-        .brand-name {
-            font-family: 'Bangers', cursive;
-            font-size: 64px;
-            letter-spacing: 4px;
-            text-shadow: 4px 4px 0px white;
-            margin: 0;
+        .brand-icon {
+            width: 60px; height: 60px;
+            background: var(--ink-black);
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex; align-items: center; justify-content: center;
+            border: 3px solid white;
         }
 
-        .brand-sub { font-family: 'Permanent Marker', cursive; font-size: 18px; color: #555; }
+        .brand-icon svg { width: 35px; height: 35px; fill: var(--comic-yellow); }
 
-        /* Navigation Tabs */
-        .tabs { display: flex; gap: 12px; margin-bottom: 25px; }
+        .brand-name { font-family: 'Bangers', cursive; font-size: 50px; margin: 0; letter-spacing: 2px; }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
         .tab {
-            flex: 1; padding: 15px;
-            font-family: 'Bangers', cursive;
-            font-size: 20px;
-            border: var(--border-thick) solid var(--ink-black);
-            background: white;
-            cursor: pointer;
-            box-shadow: 6px 6px 0px var(--ink-black);
-            transition: 0.1s;
+            flex: 1; padding: 12px; font-family: 'Bangers', cursive; font-size: 18px;
+            border: var(--border-thick) solid var(--ink-black); background: white;
+            cursor: pointer; box-shadow: 5px 5px 0px var(--ink-black);
         }
-        .tab.active { background: var(--comic-blue); transform: translate(3px, 3px); box-shadow: 3px 3px 0px var(--ink-black); }
+        .tab.active { background: var(--comic-blue); transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--ink-black); }
 
         .section { display: none; }
         .section.active { display: block; }
 
         .card {
-            background: white;
-            border: var(--border-thick) solid var(--ink-black);
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 8px 8px 0px var(--ink-black);
-            position: relative;
+            background: white; border: var(--border-thick) solid var(--ink-black);
+            padding: 20px; margin-bottom: 20px; box-shadow: 8px 8px 0px var(--ink-black);
         }
 
-        /* Form Styling */
-        .lbl { font-family: 'Bangers', cursive; font-size: 22px; display: block; margin-bottom: 12px; }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .lbl { font-family: 'Bangers', cursive; font-size: 20px; display: block; margin-bottom: 10px; }
         
         .choice-btn {
-            padding: 10px 20px; border: 2.5px solid var(--ink-black);
-            font-family: 'Bangers', cursive; font-size: 16px; cursor: pointer; background: white;
-            box-shadow: 4px 4px 0px var(--ink-black);
+            padding: 8px 15px; border: 2.5px solid var(--ink-black);
+            font-family: 'Bangers', cursive; cursor: pointer; background: white;
+            box-shadow: 4px 4px 0px var(--ink-black); margin-right: 8px; margin-bottom: 8px;
         }
 
-        /* Fixed Urgency Button Coloring */
-        .sel-low { background: var(--comic-green) !important; }
-        .sel-med { background: var(--comic-yellow) !important; } /* Fixed logic */
-        .sel-high { background: var(--comic-red) !important; color: white; }
-        
-        .sel-conflict { background: var(--comic-pink) !important; }
-        .sel-management { var(--comic-yellow) !important; }
+        /* Logic Styles */
+        .sel-low, .sel-wellbeing { background: var(--comic-green) !important; }
+        .sel-med, .sel-management { background: var(--comic-yellow) !important; }
+        .sel-high, .sel-conflict { background: var(--comic-red) !important; color: white; }
         .sel-policy { background: var(--comic-blue) !important; }
-        .sel-wellbeing { background: var(--comic-green) !important; }
 
-        .msg-area { 
-            width: 100%; height: 150px; border: var(--border-thick) solid var(--ink-black); 
-            padding: 15px; font-family: inherit; font-size: 18px; font-weight: bold; 
-            box-sizing: border-box; background: #fff;
-        }
+        .msg-area { width: 100%; height: 120px; border: var(--border-thick) solid var(--ink-black); padding: 10px; font-family: inherit; font-weight: bold; }
 
         .submit-btn {
-            width: 100%; padding: 18px; background: var(--comic-red); color: white;
-            font-family: 'Bangers', cursive; font-size: 28px; border: var(--border-thick) solid var(--ink-black);
-            cursor: pointer; box-shadow: 6px 6px 0px var(--ink-black); margin-top: 10px;
+            width: 100%; padding: 15px; background: var(--comic-red); color: white;
+            font-family: 'Bangers', cursive; font-size: 24px; border: var(--border-thick) solid var(--ink-black);
+            cursor: pointer; box-shadow: 5px 5px 0px var(--ink-black);
         }
-        .submit-btn:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0px var(--ink-black); }
 
-        /* Board Cards */
-        .badge { font-family: 'Bangers', cursive; padding: 4px 12px; border: 2px solid black; margin-right: 8px; font-size: 14px; text-transform: uppercase; }
-        .fb-text { font-size: 20px; line-height: 1.5; margin: 15px 0; font-weight: 700; }
-        .fb-date { font-family: 'Permanent Marker'; font-size: 14px; color: #666; }
-
-        /* Admin UI */
-        .act-btn { font-family: 'Bangers', cursive; padding: 8px 16px; border: 2px solid black; cursor: pointer; box-shadow: 3px 3px 0px black; margin-right: 10px; }
-        .btn-delete { background: var(--ink-black); color: white; }
+        .badge { font-family: 'Bangers', cursive; padding: 3px 10px; border: 2px solid black; margin-right: 5px; font-size: 13px; }
     </style>
 </head>
 <body>
 
 <div class="portal">
     <div class="header">
+        <div class="brand-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        </div>
         <h1 class="brand-name">Voice Hub</h1>
-        <p class="brand-sub">WHERE EVERY WORD PACKS A PUNCH!</p>
     </div>
 
     <div class="tabs">
-        <button class="tab active" onclick="openTab('submit', this)">SEND DISPATCH</button>
+        <button class="tab active" onclick="openTab('submit', this)">DISPATCH</button>
         <button class="tab" onclick="openTab('board', this)">THE HUB</button>
-        <button class="tab" onclick="openTab('admin', this)">ADMIN HQ</button>
     </div>
 
     <div id="submit" class="section active">
         <div class="card">
-            <label class="lbl">SELECT CATEGORY</label>
-            <div class="btn-group" id="cat-group">
+            <label class="lbl">CATEGORY</label>
+            <div id="cat-group">
                 <button class="choice-btn" onclick="setCat('conflict', this)">Conflict</button>
                 <button class="choice-btn" onclick="setCat('management', this)">Management</button>
                 <button class="choice-btn" onclick="setCat('policy', this)">Policy</button>
                 <button class="choice-btn" onclick="setCat('wellbeing', this)">Wellbeing</button>
             </div>
 
-            <label class="lbl">URGENCY LEVEL</label>
-            <div class="btn-group" id="sev-group">
+            <label class="lbl">URGENCY</label>
+            <div id="sev-group">
                 <button class="choice-btn" onclick="setSev('low', this)">Low</button>
                 <button class="choice-btn" onclick="setSev('medium', this)">Medium</button>
                 <button class="choice-btn" onclick="setSev('high', this)">High</button>
             </div>
 
-            <label class="lbl">YOUR MESSAGE</label>
-            <textarea id="fb-text" class="msg-area" placeholder="Write your message here..."></textarea>
-            <button class="submit-btn" onclick="submitReport()">BROADCAST NOW!</button>
+            <label class="lbl">MESSAGE</label>
+            <textarea id="fb-text" class="msg-area" placeholder="Enter dispatch..."></textarea>
+            <br><br>
+            <button class="submit-btn" onclick="submitReport()">SEND TO HUB</button>
         </div>
     </div>
 
     <div id="board" class="section">
         <div id="board-grid"></div>
     </div>
-
-    <div id="admin" class="section">
-        <div id="admin-gate" class="card" style="text-align:center;">
-            <label class="lbl">ADMIN KEY REQUIRED</label>
-            <input type="password" id="admin-pass" style="padding:10px; border:3px solid black; width:200px; font-size:18px;"><br><br>
-            <button class="choice-btn" onclick="login()">ENTER HQ</button>
-        </div>
-        <div id="admin-panel" style="display:none;">
-            <div id="admin-list"></div>
-        </div>
-    </div>
 </div>
 
 <script type="module">
-    // Firebase Integration
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCg5LSNh0EIKjv5eQKPpWT8ZMF49zQX9Dc",
@@ -191,19 +155,15 @@
     const db = getDatabase(app);
     const reportsRef = ref(db, 'reports');
 
-    let allReports = [];
-    let selCat = '';
-    let selSev = '';
+    let selCat = ''; let selSev = '';
 
-    // Navigation
-    window.openTab = function(tabId, btn) {
+    window.openTab = (id, btn) => {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
+        document.getElementById(id).classList.add('active');
         btn.classList.add('active');
     };
 
-    // Selection Logic (Fixed Medium Button)
     window.setCat = (val, btn) => {
         selCat = val;
         document.querySelectorAll('#cat-group .choice-btn').forEach(b => b.classList.remove('sel-conflict','sel-management','sel-policy','sel-wellbeing'));
@@ -213,76 +173,31 @@
     window.setSev = (val, btn) => {
         selSev = val;
         document.querySelectorAll('#sev-group .choice-btn').forEach(b => b.classList.remove('sel-low','sel-med','sel-high'));
-        // We use 'med' class for visual styling to keep it short, but 'medium' for the data
-        btn.classList.add('sel-' + (val === 'medium' ? 'med' : val));
+        btn.classList.add(val === 'medium' ? 'sel-med' : 'sel-' + val);
     };
 
-    // Submit Dispatch
-    window.submitReport = function() {
-        const text = document.getElementById('fb-text').value.trim();
-        if(!selCat || !selSev || text.length < 5) return alert("Fill out the full dispatch, hero!");
-
-        push(reportsRef, {
-            cat: selCat,
-            sev: selSev,
-            text: text,
-            date: new Date().toLocaleDateString()
-        });
-        
-        alert("KAPOW! Message received.");
+    window.submitReport = () => {
+        const text = document.getElementById('fb-text').value;
+        if(!selCat || !selSev || !text) return alert("Complete all fields!");
+        push(reportsRef, { cat: selCat, sev: selSev, text: text, date: new Date().toLocaleDateString() });
+        alert("Sent!");
         document.getElementById('fb-text').value = '';
-        selCat = ''; selSev = '';
-        document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('sel-conflict','sel-management','sel-policy','sel-wellbeing','sel-low','sel-med','sel-high'));
     };
 
-    // Live Data Listener
-    onValue(reportsRef, (snapshot) => {
-        const data = snapshot.val();
-        allReports = [];
-        for (let id in data) { allReports.unshift({ id, ...data[id] }); }
-        renderBoard();
-        renderAdmin();
-    });
-
-    function renderBoard() {
+    onValue(reportsRef, (snap) => {
+        const data = snap.val();
         const grid = document.getElementById('board-grid');
-        grid.innerHTML = allReports.map(r => `
-            <div class="card">
-                <div>
-                    <span class="badge" style="background:var(--comic-blue)">${r.cat}</span>
-                    <span class="badge ${r.sev === 'medium' ? 'sel-med' : 'sel-' + r.sev}">${r.sev}</span>
-                </div>
-                <p class="fb-text">"${r.text}"</p>
-                <span class="fb-date">LOGGED: ${r.date}</span>
-            </div>
-        `).join('');
-    }
-
-    function renderAdmin() {
-        const list = document.getElementById('admin-list');
-        list.innerHTML = allReports.map(r => `
-            <div class="card">
-                <p><strong>ID: ${r.id}</strong></p>
-                <p>${r.text}</p>
-                <button class="act-btn btn-delete" onclick="hardDelete('${r.id}')">ERASE FROM HUB</button>
-            </div>
-        `).join('');
-    }
-
-    window.hardDelete = (id) => {
-        if(confirm("DANGER! Erase this dispatch forever?")) {
-            remove(ref(db, `reports/${id}`));
+        grid.innerHTML = '';
+        for(let id in data) {
+            const r = data[id];
+            grid.innerHTML += `<div class="card">
+                <span class="badge sel-${r.cat}">${r.cat}</span>
+                <span class="badge ${r.sev === 'medium' ? 'sel-med' : 'sel-' + r.sev}">${r.sev}</span>
+                <p><b>${r.text}</b></p>
+                <small>${r.date}</small>
+            </div>`;
         }
-    };
-
-    window.login = () => {
-        if(document.getElementById('admin-pass').value === 'Chat2026') {
-            document.getElementById('admin-gate').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'block';
-        } else {
-            alert("ACCESS DENIED!");
-        }
-    };
+    });
 </script>
 </body>
 </html>
