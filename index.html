@@ -77,7 +77,7 @@
         .sel-policy { background: var(--comic-blue) !important; }
 
         .msg-area { 
-            width: 100%; height: 150px; border: 4px solid var(--ink-black); 
+            width: 100%; height: 120px; border: 4px solid var(--ink-black); 
             padding: 12px; font-family: inherit; font-size: 18px; font-weight: bold; 
         }
 
@@ -88,19 +88,12 @@
         }
 
         .guidelines-note {
-            background: var(--comic-blue);
-            border: 3px solid var(--ink-black);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 5px 5px 0px var(--ink-black);
+            background: var(--comic-blue); border: 3px solid var(--ink-black);
+            padding: 15px; margin-bottom: 20px; box-shadow: 5px 5px 0px var(--ink-black);
         }
 
-        .gate-wrap { text-align: center; padding: 40px 0; }
-        .gate-wrap input { 
-            padding: 12px; border: 4px solid var(--ink-black); 
-            font-size: 20px; font-family: 'Bangers', cursive; width: 250px;
-        }
+        .admin-controls { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+        .status-tag { font-family: 'Bangers'; padding: 2px 8px; border: 2px solid black; float: right; }
     </style>
 </head>
 <body>
@@ -116,19 +109,13 @@
     <div class="tabs">
         <button class="tab active" onclick="showTab('submit', this)">DISPATCH</button>
         <button class="tab" onclick="showTab('board', this)">THE HUB</button>
-        <button class="tab" id="admin-tab-btn" onclick="showTab('admin', this)">ADMIN HQ</button>
+        <button class="tab" onclick="showTab('admin', this)">ADMIN HQ</button>
     </div>
 
     <div id="submit" class="section active">
         <details class="guidelines-note">
-            <summary style="font-family:'Bangers'; font-size: 20px; cursor:pointer; list-style: none;">
-                THE CODE OF CONDUCT (READ THIS!) ▼
-            </summary>
-            <div style="margin-top:10px; font-family: 'Comic Neue';">
-                <p><strong>NO HATE</strong> — Keep it professional.</p>
-                <p><strong>NO POLITICS</strong> — Save the debates for the Town hall.</p>
-                <p><strong>STAY CIVIL</strong> — Be Kind.</p>
-            </div>
+            <summary style="font-family:'Bangers'; font-size: 20px; cursor:pointer; list-style: none;">CODE OF CONDUCT ▼</summary>
+            <p><strong>NO HATE</strong> | <strong>NO POLITICS</strong> | <strong>STAY CIVIL</strong></p>
         </details>
 
         <div class="card">
@@ -139,18 +126,15 @@
                 <button class="choice-btn" onclick="setCat('policy', this)">Policy</button>
                 <button class="choice-btn" onclick="setCat('wellbeing', this)">Wellbeing</button>
             </div>
-
             <label class="lbl">URGENCY</label>
             <div id="sev-group">
                 <button class="choice-btn" onclick="setSev('low', this)">Low</button>
                 <button class="choice-btn" onclick="setSev('medium', this)">Medium</button>
                 <button class="choice-btn" onclick="setSev('high', this)">High</button>
             </div>
-
             <label class="lbl">MESSAGE</label>
-            <textarea id="fb-text" class="msg-area" placeholder="Enter your dispatch..."></textarea>
-            <br><br>
-            <button class="submit-btn" onclick="submitReport()">SEND TO HUB!</button>
+            <textarea id="fb-text" class="msg-area" placeholder="Write here..."></textarea>
+            <button class="submit-btn" onclick="submitReport()">BROADCAST!</button>
         </div>
     </div>
 
@@ -159,93 +143,133 @@
     </div>
 
     <div id="admin" class="section">
-        <div id="admin-gate" class="card gate-wrap">
-            <label class="lbl">ADMIN CLEARANCE REQUIRED</label>
-            <input type="password" id="admin-pw" placeholder="Enter Key...">
+        <div id="admin-gate" class="card" style="text-align:center;">
+            <label class="lbl">ADMIN KEY REQUIRED</label>
+            <input type="password" id="admin-pw" style="padding:10px; border:3px solid black; font-family:'Bangers'; width:200px;">
             <br><br>
-            <button class="choice-btn" onclick="login()">UNLOCK HQ</button>
+            <button class="choice-btn" onclick="login()">ENTER</button>
         </div>
         <div id="admin-panel" style="display:none;">
-            <div class="card">
-                <label class="lbl">ADMIN DASHBOARD</label>
-                <div id="admin-list"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <label class="lbl">HQ DASHBOARD</label>
+                <button class="choice-btn sel-high" onclick="logout()">LOGOUT</button>
             </div>
+            <div id="admin-list"></div>
         </div>
     </div>
 </div>
 
-<script>
-    const PASS = 'Chat2026'; // Your Admin Password
-    let reports = [];
-    let selCat = ''; 
-    let selSev = '';
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    function showTab(id, btn) {
+    const firebaseConfig = {
+        apiKey: "AIzaSyCg5LSNh0EIKjv5eQKPpWT8ZMF49zQX9Dc",
+        authDomain: "voice-hub-portal.firebaseapp.com",
+        databaseURL: "https://voice-hub-portal-default-rtdb.firebaseio.com",
+        projectId: "voice-hub-portal",
+        storageBucket: "voice-hub-portal.firebasestorage.app",
+        messagingSenderId: "1052590708905",
+        appId: "1:1052590708905:web:50237423f82a3c4ceeb1b8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const reportsRef = ref(db, 'reports');
+
+    let selCat = ''; let selSev = '';
+
+    // Functions attached to window so HTML buttons can see them
+    window.showTab = (id, btn) => {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         btn.classList.add('active');
-    }
+    };
 
-    function setCat(val, btn) {
+    window.setCat = (val, btn) => {
         selCat = val;
-        document.querySelectorAll('#cat-group .choice-btn').forEach(b => b.className = 'choice-btn');
+        document.querySelectorAll('#cat-group .choice-btn').forEach(b => b.classList.remove('sel-conflict','sel-management','sel-policy','sel-wellbeing'));
         btn.classList.add('sel-' + val);
-    }
+    };
 
-    function setSev(val, btn) {
+    window.setSev = (val, btn) => {
         selSev = val;
-        document.querySelectorAll('#sev-group .choice-btn').forEach(b => b.className = 'choice-btn');
+        document.querySelectorAll('#sev-group .choice-btn').forEach(b => b.classList.remove('sel-low','sel-med','sel-high'));
         btn.classList.add(val === 'medium' ? 'sel-med' : 'sel-' + val);
-    }
+    };
 
-    function login() {
-        if(document.getElementById('admin-pw').value === PASS) {
+    window.login = () => {
+        if(document.getElementById('admin-pw').value === 'Chat2026') {
             document.getElementById('admin-gate').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'block';
-        } else {
-            alert("ACCESS DENIED!");
-        }
-    }
+        } else { alert("WRONG KEY!"); }
+    };
 
-    function submitReport() {
+    window.logout = () => {
+        document.getElementById('admin-pw').value = '';
+        document.getElementById('admin-gate').style.display = 'block';
+        document.getElementById('admin-panel').style.display = 'none';
+    };
+
+    window.submitReport = () => {
         const text = document.getElementById('fb-text').value;
-        if(!selCat || !selSev || !text) return alert("Complete the dispatch!");
-        
-        const newReport = { cat: selCat, sev: selSev, text: text, date: new Date().toLocaleDateString() };
-        reports.unshift(newReport);
-        
-        alert("KAPOW! Dispatch Sent.");
-        renderHub();
+        if(!selCat || !selSev || !text) return alert("Fill everything!");
+        push(reportsRef, { 
+            cat: selCat, sev: selSev, text: text, 
+            date: new Date().toLocaleDateString(), 
+            status: 'active', comment: '' 
+        });
+        alert("Sent!");
         document.getElementById('fb-text').value = '';
-        selCat = ''; selSev = '';
-        document.querySelectorAll('.choice-btn').forEach(b => b.className = 'choice-btn');
-    }
+    };
 
-    function renderHub() {
+    // Admin Actions
+    window.updateStatus = (id, status) => {
+        let comment = '';
+        if(status === 'resolved' || status === 'removed') {
+            comment = prompt("Enter admin comment/reason:");
+            if(comment === null) return;
+        }
+        update(ref(db, `reports/${id}`), { status: status, comment: comment });
+    };
+
+    window.hardDelete = (id) => {
+        if(confirm("Permanent delete from database?")) remove(ref(db, `reports/${id}`));
+    };
+
+    // Live Sync
+    onValue(reportsRef, (snap) => {
+        const data = snap.val();
         const grid = document.getElementById('board-grid');
         const adminGrid = document.getElementById('admin-list');
-        grid.innerHTML = '';
-        adminGrid.innerHTML = '';
+        grid.innerHTML = ''; adminGrid.innerHTML = '';
 
-        reports.forEach((r, index) => {
-            const cardHtml = `
-                <div class="card">
-                    <span class="lbl sel-${r.cat}" style="display:inline-block; padding: 2px 8px; border: 2px solid black;">${r.cat.toUpperCase()}</span>
-                    <p style="font-size: 20px; font-weight: bold; margin: 15px 0;">"${r.text}"</p>
-                    <small style="font-family: 'Permanent Marker';">LOGGED: ${r.date}</small>
-                </div>`;
-            grid.innerHTML += cardHtml;
-            adminGrid.innerHTML += cardHtml + `<button class="choice-btn sel-high" onclick="deleteReport(${index})">DELETE FOREVER</button><hr>`;
-        });
-    }
+        for(let id in data) {
+            const r = data[id];
+            const isRemoved = r.status === 'removed';
+            
+            // Public Board
+            const card = `<div class="card" style="${isRemoved ? 'opacity:0.5' : ''}">
+                <span class="status-tag ${isRemoved ? 'sel-high' : 'sel-low'}">${r.status.toUpperCase()}</span>
+                <span class="lbl sel-${r.cat}" style="display:inline-block; padding:2px 8px; border:2px solid black;">${r.cat}</span>
+                <p><b>${isRemoved ? '[ MESSAGE REMOVED BY ADMIN ]' : r.text}</b></p>
+                ${r.comment ? `<p style="color:red"><i>Admin: ${r.comment}</i></p>` : ''}
+                <small>${r.date}</small>
+            </div>`;
+            grid.innerHTML = card + grid.innerHTML;
 
-    function deleteReport(index) {
-        if(confirm("Erase this dispatch?")) {
-            reports.splice(index, 1);
-            renderHub();
+            // Admin List
+            adminGrid.innerHTML = `<div class="card">
+                <p>ID: ${id} | <b>${r.text}</b></p>
+                <div class="admin-controls">
+                    <button class="choice-btn sel-wellbeing" onclick="updateStatus('${id}', 'resolved')">Resolve</button>
+                    <button class="choice-btn sel-med" onclick="updateStatus('${id}', 'removed')">Soft Remove</button>
+                    <button class="choice-btn sel-high" onclick="hardDelete('${id}')">Hard Delete</button>
+                </div>
+            </div>` + adminGrid.innerHTML;
         }
-    }
+    });
 </script>
 </body>
 </html>
