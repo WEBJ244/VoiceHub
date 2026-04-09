@@ -51,7 +51,6 @@
             padding: 25px; margin-bottom: 25px; box-shadow: 8px 8px 0px var(--ink);
         }
 
-        /* Red Highlight for Soft Removed Content */
         .removed-card {
             background-color: #fff0f0 !important;
             border-color: var(--retro-salmon) !important;
@@ -210,16 +209,12 @@
         document.getElementById('admin-gate').style.display = 'block';
     }
 
-    // Admin Action logic
     function adminAction(id, newStatus) { 
         const commentBox = document.getElementById('comment-' + id);
         const commentValue = commentBox.value;
 
-        if (newStatus === 'resolved' && !commentValue) {
-            return alert("Please provide feedback before resolving!");
-        }
-        if (newStatus === 'removed' && !commentValue) {
-            return alert("Please provide a reason for removing this dispatch!");
+        if (!commentValue && (newStatus === 'resolved' || newStatus === 'removed')) {
+            return alert("Please provide feedback/reason first!");
         }
 
         db.ref('reports/' + id).update({
@@ -228,11 +223,12 @@
         }).then(() => {
             if(newStatus === 'resolved') alert("Feedback Sent & Resolved!");
             if(newStatus === 'removed') alert("Dispatch Redacted & Hidden.");
+            if(newStatus === 'active') alert("Comment Saved!");
         });
     }
 
     function hardDelete(id) {
-        if(confirm("CRITICAL: Permanently delete this record from the database? This cannot be undone.")) {
+        if(confirm("CRITICAL: Permanently delete this from the database?")) {
             db.ref('reports/' + id).remove().then(() => alert("Entry Erased."));
         }
     }
@@ -248,7 +244,6 @@
             const r = data[id];
             const isRemoved = r.status === 'removed';
 
-            // Public Hub Card
             grid.innerHTML += `
                 <div class="card ${isRemoved ? 'removed-card' : ''}">
                     <span class="status-tag">${r.status.toUpperCase()}</span>
@@ -260,12 +255,12 @@
                     <small>${r.date}</small>
                 </div>`;
             
-            // Admin Card
             adminGrid.innerHTML += `
                 <div class="card">
                     <p><b>Original Text:</b> ${r.text}</p>
-                    <textarea id="comment-${id}" class="admin-input" placeholder="Type feedback or removal reason here...">${r.comment || ''}</textarea>
+                    <textarea id="comment-${id}" class="admin-input" placeholder="Type feedback here...">${r.comment || ''}</textarea>
                     <div style="margin-top:10px;">
+                        <button class="choice-btn" style="background:#e6d5b8;" onclick="adminAction('${id}','active')">COMMENT</button>
                         <button class="choice-btn" style="background:#ccffcc;" onclick="adminAction('${id}','resolved')">RESOLVE</button>
                         <button class="choice-btn" style="background:#ffcccc;" onclick="adminAction('${id}','removed')">REMOVE (HIDE)</button>
                         <button class="choice-btn" style="background:#000; color:#fff;" onclick="hardDelete('${id}')">HARD DELETE</button>
