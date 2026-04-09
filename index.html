@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Hub | Moderated Retro</title>
+    <title>Voice Hub | Secure Retro</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
@@ -12,7 +12,7 @@
         :root {
             --retro-cream: #FDF5E6;
             --retro-teal: #92C5C5;
-            --retro-salmon: #F2A6A6; /* Soft Red for highlights */
+            --retro-salmon: #F2A6A6;
             --retro-sand: #E6D5B8;
             --ink: #333333;
         }
@@ -49,7 +49,6 @@
         .card {
             background: white; border: 4px solid var(--ink);
             padding: 25px; margin-bottom: 25px; box-shadow: 8px 8px 0px var(--ink);
-            transition: 0.3s;
         }
 
         /* Red Highlight for Soft Removed Content */
@@ -57,6 +56,12 @@
             background-color: #fff0f0 !important;
             border-color: var(--retro-salmon) !important;
         }
+
+        .rules-box {
+            background: #fffbe6; border: 3px dashed var(--ink);
+            padding: 15px; margin-bottom: 20px;
+        }
+        .rules-header { font-family: 'Bangers'; color: var(--retro-salmon); font-size: 20px; }
 
         .lbl { font-family: 'Bangers', cursive; font-size: 24px; display: block; margin-bottom: 12px; }
         
@@ -74,6 +79,7 @@
         }
 
         .status-tag { font-family: 'Bangers'; padding: 4px 10px; border: 2px solid var(--ink); float: right; background: var(--retro-sand); }
+        
         .admin-note {
             margin-top: 15px; padding: 10px; border-left: 5px solid var(--retro-salmon);
             background: #ffe6e6; font-family: 'Permanent Marker', cursive; font-size: 18px;
@@ -92,14 +98,29 @@
     </div>
 
     <div id="submit" class="section active">
+        <div class="rules-box">
+            <span class="rules-header">🛡️ SAFETY PROTOCOLS</span>
+            <ul style="margin: 10px 0 0 20px; font-weight: bold;">
+                <li>Keep it Anonymous: No real names or identifying info.</li>
+                <li>Stay Safe: Use this space for constructive feedback, not harassment.</li>
+                <li>Privacy: Data is stored securely and monitored for safety.</li>
+            </ul>
+        </div>
+
         <div class="card">
             <label class="lbl">CATEGORY</label>
             <div id="cat-group">
                 <button class="choice-btn" onclick="setVal('cat', 'Conflict', this)">Conflict</button>
                 <button class="choice-btn" onclick="setVal('cat', 'Management', this)">Management</button>
+                <button class="choice-btn" onclick="setVal('cat', 'Policy', this)">Policy</button>
             </div>
-            <label class="lbl">MESSAGE</label>
-            <textarea id="fb-text" style="width:100%; height:120px; border:3px solid var(--ink); padding:10px; margin-bottom:15px; box-sizing: border-box;"></textarea>
+            <label class="lbl">URGENCY</label>
+            <div id="sev-group">
+                <button class="choice-btn" onclick="setVal('sev', 'Low', this)">Low</button>
+                <button class="choice-btn" onclick="setVal('sev', 'Medium', this)">Medium</button>
+                <button class="choice-btn" onclick="setVal('sev', 'High', this)">High</button>
+            </div>
+            <textarea id="fb-text" style="width:100%; height:120px; border:3px solid var(--ink); padding:10px; margin-bottom:15px; box-sizing: border-box;" placeholder="Enter dispatch details..."></textarea>
             <button class="submit-btn" onclick="submitToFirebase()">SEND DISPATCH</button>
         </div>
     </div>
@@ -111,12 +132,15 @@
     <div id="admin" class="section">
         <div id="admin-gate" class="card" style="text-align:center;">
             <label class="lbl">ADMIN KEY</label>
-            <input type="password" id="admin-pw" style="padding:10px; border:2px solid black;">
-            <button class="choice-btn" onclick="tryLogin()">UNLOCK</button>
+            <input type="password" id="admin-pw" style="padding:10px; font-size:18px; border:3px solid black;">
+            <br><br>
+            <button class="choice-btn" onclick="tryLogin()">UNLOCK HQ</button>
         </div>
         <div id="admin-panel" style="display:none;">
-            <button class="choice-btn" style="float:right;" onclick="logout()">LOGOUT</button>
-            <label class="lbl">HQ DASHBOARD</label>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <label class="lbl">HQ DASHBOARD</label>
+                <button class="choice-btn" style="background:var(--retro-salmon);" onclick="logout()">SECURE LOGOUT</button>
+            </div>
             <div id="admin-list"></div>
         </div>
     </div>
@@ -137,7 +161,7 @@
     const db = firebase.database();
     const reportsRef = db.ref('reports');
 
-    let selections = { cat: '' };
+    let selections = { cat: '', sev: '' };
 
     function showTab(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -154,16 +178,24 @@
 
     function submitToFirebase() {
         const text = document.getElementById('fb-text').value;
-        if(!selections.cat || !text) return alert("Fill all fields!");
-        reportsRef.push({ cat: selections.cat, text: text, date: new Date().toLocaleDateString(), status: 'active', comment: '' });
-        document.getElementById('fb-text').value = ''; alert("Sent!");
+        if(!selections.cat || !selections.sev || !text) return alert("All fields are mandatory!");
+        reportsRef.push({ 
+            cat: selections.cat, 
+            sev: selections.sev, 
+            text: text, 
+            date: new Date().toLocaleDateString(), 
+            status: 'active',
+            comment: '' 
+        });
+        document.getElementById('fb-text').value = '';
+        alert("Dispatch Sent!");
     }
 
     function tryLogin() {
         if(document.getElementById('admin-pw').value === 'Chat2026') {
             document.getElementById('admin-gate').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'block';
-        }
+        } else { alert("ACCESS DENIED"); }
     }
 
     function logout() {
@@ -172,12 +204,23 @@
         document.getElementById('admin-gate').style.display = 'block';
     }
 
-    // SOFT REMOVE logic: updates status to 'removed' and saves the reason
+    // New Soft Remove Function
     function softRemove(id) {
-        let reason = prompt("Why are you hiding this dispatch? (Admin Comment)");
+        let reason = prompt("Enter Admin Reason for Hiding this Dispatch:");
         if(reason !== null) {
             db.ref('reports/' + id).update({ status: 'removed', comment: reason });
         }
+    }
+
+    function resolveItem(id) {
+        let note = prompt("Admin Resolution Note:");
+        if(note !== null) {
+            db.ref('reports/' + id).update({ status: 'resolved', comment: note });
+        }
+    }
+
+    function deleteItem(id) {
+        if(confirm("Permanently erase this from the database?")) db.ref('reports/'+id).remove();
     }
 
     reportsRef.on('value', (snap) => {
@@ -191,24 +234,28 @@
             const r = data[id];
             const isRemoved = r.status === 'removed';
 
-            // PUBLIC HUB CARD
+            // Public Hub Card
             grid.innerHTML += `
                 <div class="card ${isRemoved ? 'removed-card' : ''}">
                     <span class="status-tag">${r.status.toUpperCase()}</span>
-                    <label class="lbl" style="font-size:16px;">${r.cat}</label>
-                    <p style="font-size:20px; font-weight:bold;">
-                        ${isRemoved ? '[ CONTENT HIDDEN BY MODERATOR ]' : r.text}
+                    <label class="lbl" style="font-size:16px;">${r.cat} | ${r.sev}</label>
+                    <p style="font-size:20px; font-weight:bold; margin:10px 0;">
+                        ${isRemoved ? '[ CONTENT HIDDEN BY MODERATOR ]' : `"${r.text}"`}
                     </p>
-                    ${r.comment ? `<div class="admin-note">HQ REASON: ${r.comment}</div>` : ''}
+                    ${r.comment ? `<div class="admin-note">HQ NOTE: ${r.comment}</div>` : ''}
                     <small>${r.date}</small>
                 </div>`;
             
-            // ADMIN HQ CARD
+            // Admin HQ Card
             adminGrid.innerHTML += `
                 <div class="card">
-                    <p><b>Original:</b> ${r.text}</p>
-                    <button class="choice-btn" style="background:#ffcccc;" onclick="softRemove('${id}')">Soft Remove</button>
-                    <button class="choice-btn" onclick="db.ref('reports/${id}').remove()">Hard Delete</button>
+                    <p><b>Original Text:</b> ${r.text}</p>
+                    <p><small>ID: ${id} | Status: ${r.status}</small></p>
+                    <div style="margin-top:10px;">
+                        <button class="choice-btn" style="background:#ccffcc;" onclick="resolveItem('${id}')">Resolve</button>
+                        <button class="choice-btn" style="background:#ffcccc;" onclick="softRemove('${id}')">Soft Remove</button>
+                        <button class="choice-btn" style="background:#000; color:#fff;" onclick="deleteItem('${id}')">Hard Delete</button>
+                    </div>
                 </div>`;
         });
     });
