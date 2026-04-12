@@ -3,23 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Hub | Secure Retro</title>
+    <title>Voice Hub | Town Hall Edition</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Permanent+Marker&display=swap');
 
         :root {
-            --retro-cream: #FDF5E6;
-            --retro-teal: #92C5C5;
-            --retro-salmon: #F2A6A6;
-            --retro-sand: #E6D5B8;
+            /* Brand Primary Colours */
+            --maroon: #66223b;
+            --gold: #b79962;
+            --cream: #f4eee1; /* Light tint of Gold for background */
+            
+            /* Brand Secondary Colours */
+            --seabreeze: #82ccaf;
+            --winered: #a60a3d;
+            --soil: #643335;
+            
             --ink: #333333;
         }
 
         body {
-            background-color: var(--retro-cream);
-            background-image: radial-gradient(rgba(0,0,0,0.05) 1.5px, transparent 0);
+            background-color: var(--cream);
+            background-image: radial-gradient(rgba(102, 34, 59, 0.05) 1.5px, transparent 0);
             background-size: 15px 15px;
             font-family: 'Comic Neue', cursive;
             margin: 0; padding: 0; color: var(--ink);
@@ -28,65 +34,72 @@
         .portal { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
 
         .header {
-            text-align: center; background: var(--retro-sand);
-            border: 4px solid var(--ink); padding: 1.5rem;
-            margin-bottom: 2rem; box-shadow: 10px 10px 0px var(--ink);
+            text-align: center; background: var(--gold);
+            border: 4px solid var(--maroon); padding: 1.5rem;
+            margin-bottom: 2rem; box-shadow: 10px 10px 0px var(--maroon);
         }
 
-        .brand-name { font-family: 'Bangers', cursive; font-size: 60px; margin: 0; }
+        .brand-name { font-family: 'Bangers', cursive; font-size: 60px; margin: 0; color: white; -webkit-text-stroke: 1px var(--maroon); }
 
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
         .tab {
             flex: 1; padding: 15px; font-family: 'Bangers', cursive; font-size: 22px;
-            border: 4px solid var(--ink); background: white; cursor: pointer;
-            box-shadow: 5px 5px 0px var(--ink);
+            border: 4px solid var(--maroon); background: white; cursor: pointer;
+            box-shadow: 5px 5px 0px var(--maroon); color: var(--maroon);
         }
-        .tab.active { background: var(--retro-teal); transform: translate(3px, 3px); box-shadow: 2px 2px 0px var(--ink); }
+        .tab.active { background: var(--seabreeze); transform: translate(3px, 3px); box-shadow: 2px 2px 0px var(--maroon); color: white; }
 
         .section { display: none; }
         .section.active { display: block; }
 
         .card {
-            background: white; border: 4px solid var(--ink);
-            padding: 25px; margin-bottom: 25px; box-shadow: 8px 8px 0px var(--ink);
+            background: white; border: 4px solid var(--maroon);
+            padding: 25px; margin-bottom: 25px; box-shadow: 8px 8px 0px var(--maroon);
         }
 
         .removed-card {
-            background-color: #fff0f0 !important;
-            border-color: var(--retro-salmon) !important;
+            background-color: #fdf2f2 !important;
+            border-color: var(--winered) !important;
         }
 
         .rules-box {
-            background: #fffbe6; border: 3px dashed var(--ink);
+            background: #fffdf5; border: 3px dashed var(--gold);
             padding: 15px; margin-bottom: 20px;
         }
-        .rules-header { font-family: 'Bangers'; color: var(--retro-salmon); font-size: 20px; }
+        .rules-header { font-family: 'Bangers'; color: var(--maroon); font-size: 22px; }
 
-        .lbl { font-family: 'Bangers', cursive; font-size: 24px; display: block; margin-bottom: 12px; }
+        .lbl { font-family: 'Bangers', cursive; font-size: 24px; display: block; margin-bottom: 12px; color: var(--maroon); }
         
         .choice-btn {
-            padding: 10px 20px; border: 3px solid var(--ink);
+            padding: 10px 20px; border: 3px solid var(--maroon);
             font-family: 'Bangers', cursive; font-size: 18px; cursor: pointer; background: white;
-            box-shadow: 4px 4px 0px var(--ink); margin-right: 10px; margin-bottom: 10px;
+            box-shadow: 4px 4px 0px var(--maroon); margin-right: 10px; margin-bottom: 10px; color: var(--maroon);
         }
 
-        .sel-active { background: var(--retro-teal) !important; }
+        .sel-active { background: var(--gold) !important; color: white !important; }
+        
         .submit-btn {
-            width: 100%; padding: 20px; background: var(--retro-salmon);
-            font-family: 'Bangers', cursive; font-size: 32px; border: 4px solid var(--ink);
-            cursor: pointer; box-shadow: 6px 6px 0px var(--ink);
+            width: 100%; padding: 20px; background: var(--winered);
+            font-family: 'Bangers', cursive; font-size: 32px; border: 4px solid var(--maroon);
+            cursor: pointer; box-shadow: 6px 6px 0px var(--maroon); color: white;
         }
 
-        .status-tag { font-family: 'Bangers'; padding: 4px 10px; border: 2px solid var(--ink); float: right; background: var(--retro-sand); }
+        .status-tag { font-family: 'Bangers'; padding: 4px 10px; border: 2px solid var(--maroon); float: right; background: var(--gold); color: white; }
         
         .admin-note {
-            margin-top: 15px; padding: 10px; border-left: 5px solid var(--retro-salmon);
-            background: #ffe6e6; font-family: 'Permanent Marker', cursive; font-size: 18px;
+            margin-top: 15px; padding: 10px; border-left: 5px solid var(--winered);
+            background: #fdf2f2; font-family: 'Permanent Marker', cursive; font-size: 18px; color: var(--soil);
         }
 
         .admin-input {
-            width: 100%; padding: 10px; border: 2px solid var(--ink);
+            width: 100%; padding: 10px; border: 2px solid var(--maroon);
             margin-bottom: 10px; font-family: 'Comic Neue'; box-sizing: border-box;
+        }
+
+        .spotlight-banner {
+            background: var(--maroon); color: var(--gold);
+            padding: 10px; text-align: center; font-family: 'Bangers';
+            margin-bottom: 20px; border: 4px solid var(--gold); font-size: 24px;
         }
     </style>
 </head>
@@ -103,11 +116,11 @@
 
     <div id="submit" class="section active">
         <div class="rules-box">
-            <span class="rules-header">🛡️ SAFETY PROTOCOLS</span>
-            <ul style="margin: 10px 0 0 20px; font-weight: bold;">
-                <li>Keep it Anonymous: No real names or identifying info.</li>
-                <li>Stay Safe: Use this space for constructive feedback, not harassment.</li>
-                <li>Privacy: Data is stored securely and monitored for safety.</li>
+            <span class="rules-header">🛡️ PLATFORM PARAMETERS</span>
+            <ul style="margin: 10px 0 0 20px; font-weight: bold; font-size: 14px; color: var(--soil);">
+                <li>Discrimination: Zero tolerance policy.</li>
+                <li>Hate Speech: Abusive language will be removed.</li>
+                <li>Professionalism: Maintain workplace focus.</li>
             </ul>
         </div>
 
@@ -118,6 +131,7 @@
                 <button class="choice-btn" onclick="setVal('cat', 'Management', this)">Management</button>
                 <button class="choice-btn" onclick="setVal('cat', 'Policy', this)">Policy</button>
                 <button class="choice-btn" onclick="setVal('cat', 'Wellbeing', this)">Wellbeing</button>
+                <button class="choice-btn" onclick="setVal('cat', 'Staff Spotlight', this)">Staff Spotlight 🌟</button>
             </div>
             <label class="lbl">URGENCY</label>
             <div id="sev-group">
@@ -125,26 +139,27 @@
                 <button class="choice-btn" onclick="setVal('sev', 'Medium', this)">Medium</button>
                 <button class="choice-btn" onclick="setVal('sev', 'High', this)">High</button>
             </div>
-            <textarea id="fb-text" style="width:100%; height:120px; border:3px solid var(--ink); padding:10px; margin-bottom:15px; box-sizing: border-box;" placeholder="Enter dispatch details..."></textarea>
-            <button class="submit-btn" onclick="submitToFirebase()">SEND</button>
+            <textarea id="fb-text" style="width:100%; height:120px; border:3px solid var(--maroon); padding:10px; margin-bottom:15px; box-sizing: border-box;" placeholder="Share your feedback anonymously..."></textarea>
+            <button class="submit-btn" onclick="submitToFirebase()">SEND DISPATCH</button>
         </div>
     </div>
 
     <div id="board" class="section">
+        <div class="spotlight-banner">LIVE STAFF DISPATCH BOARD</div>
         <div id="board-grid"></div>
     </div>
 
     <div id="admin" class="section">
         <div id="admin-gate" class="card" style="text-align:center;">
             <label class="lbl">ADMIN KEY</label>
-            <input type="password" id="admin-pw" style="padding:10px; font-size:18px; border:3px solid black;">
+            <input type="password" id="admin-pw" style="padding:10px; font-size:18px; border:3px solid var(--maroon);">
             <br><br>
             <button class="choice-btn" onclick="tryLogin()">UNLOCK ADMIN</button>
         </div>
         <div id="admin-panel" style="display:none;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                 <label class="lbl">ADMIN DASHBOARD</label>
-                <button class="choice-btn" style="background:var(--retro-salmon);" onclick="logout()">SECURE LOGOUT</button>
+                <button class="choice-btn" style="background:var(--winered); color:white;" onclick="logout()">LOGOUT</button>
             </div>
             <div id="admin-list"></div>
         </div>
@@ -211,25 +226,14 @@
 
     function adminAction(id, newStatus) { 
         const commentBox = document.getElementById('comment-' + id);
-        const commentValue = commentBox.value;
-
-        if (!commentValue && (newStatus === 'resolved' || newStatus === 'removed')) {
-            return alert("Please provide feedback/reason first!");
-        }
-
-        db.ref('reports/' + id).update({
-            status: newStatus,
-            comment: commentValue
-        }).then(() => {
-            if(newStatus === 'resolved') alert("Feedback Sent & Resolved!");
-            if(newStatus === 'removed') alert("Dispatch Redacted & Hidden.");
-            if(newStatus === 'active') alert("Comment Saved!");
+        db.ref('reports/' + id).update({ status: newStatus, comment: commentBox.value }).then(() => {
+            alert("Record Updated Successfully.");
         });
     }
 
     function hardDelete(id) {
-        if(confirm("CRITICAL: Permanently delete this from the database?")) {
-            db.ref('reports/' + id).remove().then(() => alert("Entry Erased."));
+        if(confirm("Confirm: Delete forever?")) {
+            db.ref('reports/' + id).remove().then(() => alert("Erased."));
         }
     }
 
@@ -243,13 +247,13 @@
         Object.keys(data).reverse().forEach(id => {
             const r = data[id];
             const isRemoved = r.status === 'removed';
-
+            
             grid.innerHTML += `
                 <div class="card ${isRemoved ? 'removed-card' : ''}">
                     <span class="status-tag">${r.status.toUpperCase()}</span>
                     <label class="lbl" style="font-size:16px;">${r.cat} | ${r.sev}</label>
                     <p style="font-size:20px; font-weight:bold; margin:10px 0;">
-                        ${isRemoved ? '[ CONTENT REMOVED BY MODERATOR ]' : `"${r.text}"`}
+                        ${isRemoved ? '[ CONTENT REMOVED ]' : `"${r.text}"`}
                     </p>
                     ${r.comment ? `<div class="admin-note">ADMIN FEEDBACK: ${r.comment}</div>` : ''}
                     <small>${r.date}</small>
@@ -258,12 +262,12 @@
             adminGrid.innerHTML += `
                 <div class="card">
                     <p><b>Original Text:</b> ${r.text}</p>
-                    <textarea id="comment-${id}" class="admin-input" placeholder="Type feedback here...">${r.comment || ''}</textarea>
-                    <div style="margin-top:10px;">
-                        <button class="choice-btn" style="background:#e6d5b8;" onclick="adminAction('${id}','active')">COMMENT</button>
-                        <button class="choice-btn" style="background:#ccffcc;" onclick="adminAction('${id}','resolved')">RESOLVE</button>
-                        <button class="choice-btn" style="background:#ffcccc;" onclick="adminAction('${id}','removed')">REMOVE (HIDE)</button>
-                        <button class="choice-btn" style="background:#000; color:#fff;" onclick="hardDelete('${id}')">HARD DELETE</button>
+                    <textarea id="comment-${id}" class="admin-input" placeholder="Feedback...">${r.comment || ''}</textarea>
+                    <div>
+                        <button class="choice-btn" style="background:var(--gold); color:white;" onclick="adminAction('${id}','active')">COMMENT</button>
+                        <button class="choice-btn" style="background:var(--seabreeze); color:white;" onclick="adminAction('${id}','resolved')">RESOLVE</button>
+                        <button class="choice-btn" style="background:var(--winered); color:white;" onclick="adminAction('${id}','removed')">HIDE</button>
+                        <button class="choice-btn" style="background:var(--soil); color:white;" onclick="hardDelete('${id}')">DELETE</button>
                     </div>
                 </div>`;
         });
